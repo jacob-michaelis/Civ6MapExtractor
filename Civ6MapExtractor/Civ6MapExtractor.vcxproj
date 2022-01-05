@@ -72,15 +72,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>Libraries;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>Libraries;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <SourcePath>Libraries/zlib;$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>Libraries;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>Libraries;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <SourcePath>Libraries/zlib;$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>Libraries;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>Libraries;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <SourcePath>Libraries/zlib;$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>Libraries;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>Libraries;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <SourcePath>Libraries/zlib;$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -139,11 +151,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Libraries\zlib\adler32.c" />
+    <ClCompile Include="Libraries\zlib\compress.c" />
+    <ClCompile Include="Libraries\zlib\crc32.c" />
+    <ClCompile Include="Libraries\zlib\deflate.c" />
+    <ClCompile Include="Libraries\zlib\gzclose.c" />
+    <ClCompile Include="Libraries\zlib\gzlib.c" />
+    <ClCompile Include="Libraries\zlib\gzread.c" />
+    <ClCompile Include="Libraries\zlib\gzwrite.c" />
+    <ClCompile Include="Libraries\zlib\infback.c" />
+    <ClCompile Include="Libraries\zlib\inffast.c" />
+    <ClCompile Include="Libraries\zlib\inflate.c" />
+    <ClCompile Include="Libraries\zlib\inftrees.c" />
+    <ClCompile Include="Libraries\zlib\trees.c" />
+    <ClCompile Include="Libraries\zlib\uncompr.c" />
+    <ClCompile Include="Libraries\zlib\zutil.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Unpacker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="Libraries\sqlite\sqlite3.h" />
+    <ClInclude Include="Libraries\zlib\crc32.h" />
+    <ClInclude Include="Libraries\zlib\deflate.h" />
+    <ClInclude Include="Libraries\zlib\gzguts.h" />
+    <ClInclude Include="Libraries\zlib\inffast.h" />
+    <ClInclude Include="Libraries\zlib\inffixed.h" />
+    <ClInclude Include="Libraries\zlib\inflate.h" />
+    <ClInclude Include="Libraries\zlib\inftrees.h" />
+    <ClInclude Include="Libraries\zlib\trees.h" />
+    <ClInclude Include="Libraries\zlib\zconf.h" />
+    <ClInclude Include="Libraries\zlib\zlib.h" />
+    <ClInclude Include="Libraries\zlib\zutil.h" />
     <ClInclude Include="typedefs.h" />
+    <ClInclude Include="Unpacker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

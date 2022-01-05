@@ -4,14 +4,113 @@
     <Filter Include="Libraries">
       <UniqueIdentifier>{3d3e83ad-2883-4766-9a3e-97c4704ded0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\zlib">
+      <UniqueIdentifier>{b5e4df4c-ad2f-4084-805f-a451bbd2ca72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\sqlite">
+      <UniqueIdentifier>{e40b249f-9388-467d-b3cd-f2f7413c9ba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\zlib\src">
+      <UniqueIdentifier>{b8c6daf2-0d0c-4174-a4ce-60866aa042be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packed Save Extraction">
+      <UniqueIdentifier>{11691f00-b367-4d4b-bcb0-f922453aa1ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unpacked Save Extraction">
+      <UniqueIdentifier>{2df86649-ea82-46c0-9ae8-c1bc6711bca6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sqlite3.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
     <ClInclude Include="typedefs.h" />
+    <ClInclude Include="Libraries\sqlite\sqlite3.h">
+      <Filter>Libraries\sqlite</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\gzguts.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\inffast.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\inffixed.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\inflate.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\inftrees.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\trees.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\zconf.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\zlib.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\zutil.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\crc32.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\zlib\deflate.h">
+      <Filter>Libraries\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="Unpacker.h">
+      <Filter>Packed Save Extraction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Libraries\zlib\gzclose.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\gzlib.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\gzread.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\gzwrite.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\infback.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\inffast.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\inflate.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\inftrees.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\trees.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\uncompr.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\zutil.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\adler32.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\compress.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\crc32.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\zlib\deflate.c">
+      <Filter>Libraries\zlib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Unpacker.cpp">
+      <Filter>Packed Save Extraction</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
