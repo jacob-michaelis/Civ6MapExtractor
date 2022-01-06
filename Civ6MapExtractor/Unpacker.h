@@ -2,4 +2,17 @@
 //   file and but it in more readable .dat files
 #pragma once
 
-void UnpackSave(char const* filename);
+#include "typedefs.h"
+
+typedef struct SaveData
+{
+    uint8* header;
+    uint8* headerEnd;
+    uint8* gamedata;
+    uint8* gamedataEnd;
+    uint8* tail;
+    uint8* tailEnd;
+};
+
+void UnpackSave(char const* filename, SaveData* out);
+void ReleaseSaveData(SaveData* save);

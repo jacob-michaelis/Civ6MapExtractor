@@ -19,6 +19,9 @@
     <Filter Include="Unpacked Save Extraction">
       <UniqueIdentifier>{2df86649-ea82-46c0-9ae8-c1bc6711bca6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{e0ddbe4e-da76-4093-83dc-46482c3d03f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="typedefs.h" />
@@ -60,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="Unpacker.h">
       <Filter>Packed Save Extraction</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryDataTools.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +117,9 @@
     </ClCompile>
     <ClCompile Include="Unpacker.cpp">
       <Filter>Packed Save Extraction</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryDataTools.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

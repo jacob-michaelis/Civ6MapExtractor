@@ -353,3 +353,7 @@ MigrationBackup/
 *.Civ6Save
 *.Civ6Save.bin
 *.Civ6Map
+*.dat
+*.dump
+*.hexdump
+*.json

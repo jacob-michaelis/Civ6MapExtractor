@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BinaryDataTools.cpp" />
     <ClCompile Include="Libraries\zlib\adler32.c" />
     <ClCompile Include="Libraries\zlib\compress.c" />
     <ClCompile Include="Libraries\zlib\crc32.c" />
@@ -170,6 +171,7 @@
     <ClCompile Include="Unpacker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinaryDataTools.h" />
     <ClInclude Include="Libraries\sqlite\sqlite3.h" />
     <ClInclude Include="Libraries\zlib\crc32.h" />
     <ClInclude Include="Libraries\zlib\deflate.h" />

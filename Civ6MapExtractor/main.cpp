@@ -6,7 +6,9 @@
 
 int main(int argc, char* argv[])
 {
-    UnpackSave("ghaz0.Civ6Save");
+    SaveData data;
+    UnpackSave("ghaz0.Civ6Save", &data);
+    //UnpackSave("long_test.Civ6Save");
 
     return 0;
 }
