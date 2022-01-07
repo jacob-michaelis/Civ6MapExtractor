@@ -141,6 +141,7 @@ static uint8 const* ParseWideString(uint8 const* data, uint8 const* end)
     return data + cnt * 2 + 1;
 }
 
+
 static uint8 const* ParseText(uint8 const* data, uint8 const* end)
 {
     uint32 blockType = *(uint32*)data;
@@ -324,6 +325,147 @@ uint8 const* ParseBase(uint8 const* data, uint8 const* end)
     return it;
 }
 
+static uint8 const* Parse01(uint8 const* data)
+{
+    uint32 value = *(uint32*)(data + 4);
+    uint32 tag = *(uint32*)(data + 8);
+
+    printf("   0x01 - %08x\n", tag);
+    printf("      Value: %d\n", value);
+
+    return data + 12;
+}
+
+static uint8 const* Parse03(uint8 const* data)
+{
+    uint32 unk0 = *(uint32*)(data + 4);
+    uint32 unk1 = *(uint32*)(data + 8);
+    uint32 unk2 = *(uint32*)(data + 12);
+    uint32 tag = *(uint32*)(data + 16);
+
+    printf("   0x03 - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %08x\n", unk2);
+
+    return data + 20;
+}
+
+static uint8 const* Parse05(uint8 const* data)
+{
+    uint32 strLen = *(uint32*)(data + 4) & 0xFFFFFF;
+    uint8  id = *(data + 7);
+    uint32 strCnt = *(uint32*)(data + 8);
+    uint8 const* text = data + 12;
+    uint8 const* textEnd = text + strLen;
+    uint32 tag = *(uint32*)(textEnd);
+
+    if (id != '\x21')
+        bool bh = true;
+
+    printf("   0x05 - %08x\n", tag);
+    printf("      Value: ");
+
+    //for (; text < textEnd; ++text)
+    //    putc(*text, stdout);
+    printf("TEXT GOES HERE");
+    putc('\n', stdout);
+
+    return textEnd + 4;
+}
+
+static uint8 const* Parse06(uint8 const* data)
+{
+    uint32 strLen = *(uint32*)(data + 4) & 0xFFFFFF;
+    uint8  id = *(data + 7);
+    uint32 strCnt = *(uint32*)(data + 8);
+    wchar_t const* text = (wchar_t*)(data + 12);
+    wchar_t const* textEnd = text + strLen;
+    uint32 tag = *(uint32*)(textEnd);
+
+    if (id != '\x21')
+        bool bh = true;
+
+    printf("   0x05 - %08x\n", tag);
+    printf("      Value: ");
+
+    //for (; text < textEnd; ++text)
+    //    putwc(*text, stdout);
+    printf("TEXT GOES HERE");
+    putc('\n', stdout);
+
+    return (uint8*)textEnd + 4;
+}
+
+static uint8 const* Parse14(uint8 const* data)
+{
+    uint32 unk0 = *(uint32*)(data + 4);
+    uint32 unk1 = *(uint32*)(data + 8);
+    uint32 saveTimeSinceEpoch = *(uint32*)(data + 12);
+    uint32 unk2 = *(uint32*)(data + 16);
+    uint32 tag = *(uint32*)(data + 20);
+
+    printf("   0x14 - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Save Time (seconds since epoch): %d\n", saveTimeSinceEpoch);
+    printf("      Value: %d\n", unk2);
+
+    return data + 24;
+}
+
+static uint8 const* Parse18(uint8 const* data)
+{
+    uint8 unk0 = *(data + 4);
+    uint8 unk1 = *(data + 5);
+    uint8 unk2 = *(data + 6);
+    uint8 unk3 = *(data + 7);
+    uint32 unk4 = *(uint32*)(data + 8);
+    uint32 unk5 = *(uint32*)(data + 12);
+    uint32 unk6 = *(uint32*)(data + 16);
+    uint32 zlibSize = *(uint32*)(data + 20);
+    uint8 const* zlib = data + 24;
+    uint32 tag = *(uint32*)(zlib + zlibSize);
+
+    printf("   0x18 - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+    printf("      Value: %d\n", unk3);
+    printf("      Value: %d\n", unk4);
+    printf("      Value: %d\n", unk5);
+    printf("      Value: %d\n", unk6);
+    printf("      zlib Size: %d\n", zlibSize);
+    // TODO: unpack zlib
+    printf("         TODO: Extract zlib\n");
+
+    return zlib + zlibSize + 4;
+}
+
+static uint8 const* ParseBlock(uint8 const* data)
+{
+    uint32 blockType = *(uint32*)data;
+
+    switch (blockType)
+    {
+    case 0x01:
+        return Parse01(data);
+    case 0x03:
+        return Parse03(data);
+    case btText:
+        return Parse05(data);
+    case btTextWide:
+        return Parse06(data);
+    case 0x14:
+        return Parse14(data);
+    case 0x18:
+        return Parse18(data);
+    default:
+        blockType = blockType;
+        break;
+    }
+}
+
 // This will be just full of arbitrary numbers as I'm
 //   eyeballing an existing file
 void ParseHeader(uint8 const* header, uint8 const* headerEnd)
@@ -331,10 +473,13 @@ void ParseHeader(uint8 const* header, uint8 const* headerEnd)
     uint8 const* it = header;
 
     printf("Printing header contents:\n\n");
-    printf("   %.4s", it);
+    printf("   %.4s\n", it);
     it += 4;
 
-    it = ParseBase(it, headerEnd);
+    while (it < headerEnd)
+        it = ParseBlock(it);
+
+    //it = ParseBase(it, headerEnd);
 
     // Name, Speed, Map Size
     /*printf("   ");
