@@ -204,18 +204,18 @@ void UnpackSave(char const* filename, SaveData* out)
     uint8 const* it = data;
     uint8 const* end = data + len;
 
-    // find all instances of "MOD_TITLE"
-    uint8 const modTitle[] = "MOD_TITLE";
-    uint8 const modTitleLen = sizeof modTitle - 1;
-    uint8 const* modTitleEnd = modTitle + modTitleLen;
+    // find Barbarians to get past the initial blocks
+    uint8 const barbarians[] = "LOC_CIVILIZATION_BARBARIAN_DESCRIPTION";
+    uint8 const barbariansLen = sizeof barbarians - 1;
+    uint8 const* modTitleEnd = barbarians + barbariansLen;
 
     for (; it < end;)
     {
-        uint8 const* title = FindFirstOfSubseq(it, end, modTitle, modTitleEnd);
+        uint8 const* title = FindFirstOfSubseq(it, end, barbarians, modTitleEnd);
         if (!title)
             break;
-        printf("   %s found at offset %d\n", modTitle, title - data);
-        it = title + modTitleLen;
+        printf("   %s found at offset %d\n", barbarians, title - data);
+        it = title + barbariansLen;
     }
 
     uint8 const* zlib = FindFirstOfSubseq(it, end, zlibStartSeq, zlibStartSeqEnd);
@@ -269,11 +269,11 @@ void UnpackSave(char const* filename, SaveData* out)
     static const char gameDataStr[] = "_1_game_data.dat";
     static const char tailStr[] = "_2_tail.dat";
     memcpy(name + nameSize, headerStr, sizeof headerStr);
-    //SaveToFile(name, data, headerSize);
+    SaveToFile(name, data, headerSize);
     memcpy(name + nameSize, gameDataStr, sizeof gameDataStr);
-    //SaveToFile(name, decompressedData, decompSize);
+    SaveToFile(name, decompressedData, decompSize);
     memcpy(name + nameSize, tailStr, sizeof tailStr);
-    //SaveToFile(name, zlibEnd, tailSize);
+    SaveToFile(name, zlibEnd, tailSize);
 
     free(name);
 

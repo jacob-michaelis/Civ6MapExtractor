@@ -4,7 +4,7 @@
 
 #pragma comment(lib, "sqlite/sqlite3-static.lib")
 
-#define SAVE 0
+#define SAVE 6
 
 #if SAVE == 0
 char const* save = "ghaz0.Civ6Save";
@@ -18,6 +18,8 @@ char const* save = "ghaz1.Civ6Save";
 char const* save = "khmer0.Civ6Save";
 #elif SAVE == 5
 char const* save = "khmer1.Civ6Save";
+#elif SAVE == 6
+char const* save = "pure_duel.Civ6Save";
 #endif
 
 int main(int argc, char* argv[])
