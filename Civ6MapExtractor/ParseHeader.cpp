@@ -5,6 +5,33 @@
 #include "string.h"
 
 #define BLOCK_LEN 32
+
+#define PRINT_01 1
+#define PRINT_02 1
+#define PRINT_03 1
+#define PRINT_04 1
+#define PRINT_05 1
+#define PRINT_06 1
+#define PRINT_07 1
+#define PRINT_08 1
+#define PRINT_09 1
+#define PRINT_0a 1
+#define PRINT_0b 1
+#define PRINT_0c 1
+#define PRINT_0d 1
+#define PRINT_0e 1
+#define PRINT_0f 1
+#define PRINT_10 1
+#define PRINT_11 1
+#define PRINT_12 1
+#define PRINT_13 1
+#define PRINT_14 1
+#define PRINT_15 1
+#define PRINT_16 1
+#define PRINT_17 1
+#define PRINT_18 1
+
+
 static uint8 const unkTag[] = { 0x10, 0x07, 0x58, 0xf4, 0x05 };
 static uint8 const unkTag0[] = { 0x2f, 0x52, 0x96, 0x1a, 0x02 };
 static uint8 const unkTag1[] = { 0x95, 0xb9, 0x42, 0xce, 0x02 };
@@ -330,8 +357,10 @@ static uint8 const* Parse01(uint8 const* data)
     uint32 value = *(uint32*)(data + 4);
     uint32 tag = *(uint32*)(data + 8);
 
+#if PRINT_01
     printf("   0x01 - %08x\n", tag);
     printf("      Value: %d\n", value);
+#endif
 
     return data + 12;
 }
@@ -343,10 +372,12 @@ static uint8 const* Parse03(uint8 const* data)
     uint32 unk2 = *(uint32*)(data + 12);
     uint32 tag = *(uint32*)(data + 16);
 
+#if PRINT_03
     printf("   0x03 - %08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Value: %08x\n", unk2);
+#endif
 
     return data + 20;
 }
@@ -363,6 +394,7 @@ static uint8 const* Parse05(uint8 const* data)
     if (id != '\x21')
         bool bh = true;
 
+#if PRINT_05
     printf("   0x05 - %08x\n", tag);
     printf("      Value: ");
 
@@ -370,6 +402,7 @@ static uint8 const* Parse05(uint8 const* data)
     //    putc(*text, stdout);
     printf("TEXT GOES HERE");
     putc('\n', stdout);
+#endif
 
     return textEnd + 4;
 }
@@ -386,13 +419,15 @@ static uint8 const* Parse06(uint8 const* data)
     if (id != '\x21')
         bool bh = true;
 
-    printf("   0x05 - %08x\n", tag);
+#if PRINT_06
+    printf("   0x06 - %08x\n", tag);
     printf("      Value: ");
 
     //for (; text < textEnd; ++text)
     //    putwc(*text, stdout);
     printf("TEXT GOES HERE");
     putc('\n', stdout);
+#endif
 
     return (uint8*)textEnd + 4;
 }
@@ -405,11 +440,13 @@ static uint8 const* Parse14(uint8 const* data)
     uint32 unk2 = *(uint32*)(data + 16);
     uint32 tag = *(uint32*)(data + 20);
 
+#if PRINT_14
     printf("   0x14 - %08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Save Time (seconds since epoch): %d\n", saveTimeSinceEpoch);
     printf("      Value: %d\n", unk2);
+#endif
 
     return data + 24;
 }
@@ -427,6 +464,7 @@ static uint8 const* Parse18(uint8 const* data)
     uint8 const* zlib = data + 24;
     uint32 tag = *(uint32*)(zlib + zlibSize);
 
+#if PRINT_18
     printf("   0x18 - %08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
@@ -438,6 +476,7 @@ static uint8 const* Parse18(uint8 const* data)
     printf("      zlib Size: %d\n", zlibSize);
     // TODO: unpack zlib
     printf("         TODO: Extract zlib\n");
+#endif
 
     return zlib + zlibSize + 4;
 }
