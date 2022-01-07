@@ -4,6 +4,8 @@
 #include "stdio.h"
 #include "string.h"
 
+#include "BinaryDataTools.h"
+
 #define BLOCK_LEN 32
 
 #define PRINT_01 1
@@ -355,14 +357,47 @@ uint8 const* ParseBase(uint8 const* data, uint8 const* end)
 static uint8 const* Parse01(uint8 const* data)
 {
     uint32 value = *(uint32*)(data + 4);
-    uint32 tag = *(uint32*)(data + 8);
+    uint32 tag;
+
+    uint8 const* tagPos = (data + 4);
+    for (; *(uint32*)tagPos < 0xFF; tagPos += 4)
+        ; // just run to end
+    tag = *(uint32*)tagPos;
+
 
 #if PRINT_01
     printf("   0x01 - %08x\n", tag);
-    printf("      Value: %d\n", value);
+    for (uint32* it = (uint32*)(data + 4); it < (uint32*)tagPos; ++it)
+        printf("      Value: %d\n", *it);
 #endif
 
-    return data + 12;
+    return tagPos + 4;
+}
+
+static uint8 const* Parse02(uint8 const* data)
+{
+    uint32 unk0 = *(uint32*)(data + 4);
+    uint32 unk1 = *(uint32*)(data + 8);
+    uint32 unk2 = *(uint32*)(data + 12);
+    uint32 tag = *(uint32*)(data + 16);
+    bool bonus = false;
+
+    if (tag == 0x43)
+    {
+        tag = *(uint32*)(data + 20);
+        bonus = true;
+    }
+
+#if PRINT_02
+    printf("   0x02 - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+    if (bonus)
+        printf("      Value: %d\n", *(uint32*)(data + 16));
+#endif
+
+    return bonus ? data + 24 : data + 20;
 }
 
 static uint8 const* Parse03(uint8 const* data)
@@ -382,29 +417,54 @@ static uint8 const* Parse03(uint8 const* data)
     return data + 20;
 }
 
+static uint8 const* Parse04(uint8 const* data)
+{
+    uint32 unk0 = *(uint32*)(data + 4);
+    uint32 unk1 = *(uint32*)(data + 8);
+    uint32 unk2 = *(uint32*)(data + 12);
+    uint32 tag = *(uint32*)(data + 16);
+
+#if PRINT_04
+    printf("   0x04 - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+#endif
+
+    return data + 20;
+}
+
 static uint8 const* Parse05(uint8 const* data)
 {
-    uint32 strLen = *(uint32*)(data + 4) & 0xFFFFFF;
+    uint32 len = *(uint32*)(data + 4) & 0xFFFFFF;
     uint8  id = *(data + 7);
     uint32 strCnt = *(uint32*)(data + 8);
     uint8 const* text = data + 12;
-    uint8 const* textEnd = text + strLen;
-    uint32 tag = *(uint32*)(textEnd);
+    uint8 const* textEnd = text + len;
 
-    if (id != '\x21')
-        bool bh = true;
+    uint32 offset = id == '\x21' ? len : id == '\x20' || id == '\x00' ? 4 : 4;
+    uint8 const* tagPos = text + offset;
+    uint32 tag = *(uint32*)tagPos;
 
 #if PRINT_05
     printf("   0x05 - %08x\n", tag);
-    printf("      Value: ");
 
-    //for (; text < textEnd; ++text)
-    //    putc(*text, stdout);
-    printf("TEXT GOES HERE");
-    putc('\n', stdout);
+    if (id == '\x21')
+    {
+        printf("      Value: ");
+        for (; text < textEnd; ++text)
+            putc(*text, stdout);
+        //printf("TEXT GOES HERE");
+        putc('\n', stdout);
+    }
+    else if (id == '\x20' || id == '\x00')
+         printf("      No text stored.\n");
+    else
+        bool bh = true;
 #endif
 
-    return textEnd + 4;
+    // TODO: fix this wierd edge case, or switch to tags first
+    return tag < 0xFF ? tagPos : tagPos + 4;
 }
 
 static uint8 const* Parse06(uint8 const* data)
@@ -414,22 +474,103 @@ static uint8 const* Parse06(uint8 const* data)
     uint32 strCnt = *(uint32*)(data + 8);
     wchar_t const* text = (wchar_t*)(data + 12);
     wchar_t const* textEnd = text + strLen;
-    uint32 tag = *(uint32*)(textEnd);
-
-    if (id != '\x21')
-        bool bh = true;
+    uint8 const* tagPos = (uint8 const*)(textEnd);
+    uint32 tag = *(uint32*)tagPos;
 
 #if PRINT_06
     printf("   0x06 - %08x\n", tag);
-    printf("      Value: ");
 
-    //for (; text < textEnd; ++text)
-    //    putwc(*text, stdout);
-    printf("TEXT GOES HERE");
-    putc('\n', stdout);
+    if (id == '\x21')
+    {
+        printf("      Value: ");
+        for (; text < textEnd; ++text)
+            putwc(*text, stdout);
+        //printf("TEXT GOES HERE");
+        putc('\n', stdout);
+    }
+    else
+        bool bh = true;
 #endif
 
-    return (uint8*)textEnd + 4;
+    return tagPos + 4;
+}
+
+static uint8 const* Parse0a(uint8 const* data)
+{
+    uint32 unk0 = *(uint32*)(data + 4);
+    uint32 unk1 = *(uint32*)(data + 8);
+    uint32 unk2 = *(uint32*)(data + 12);
+    uint32 tag = *(uint32*)(data + 16);
+
+#if PRINT_0a
+    printf("   0x0a - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+#endif
+
+    return data + 20;
+}
+
+static uint8 const* Parse0b(uint8 const* data)
+{
+    uint32 unk0 = *(uint32*)(data + 4);
+    uint32 unk1 = *(uint32*)(data + 8);
+    uint32 unk2 = *(uint32*)(data + 12);
+    uint32 unk3 = *(uint32*)(data + 16);
+    uint32 unk4 = *(uint32*)(data + 20);
+    uint32 unk5 = *(uint32*)(data + 24);
+    uint32 unk6 = *(uint32*)(data + 28);
+    uint32 tag = *(uint32*)(data + 32);
+
+#if PRINT_0b
+    printf("   0x0b - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+    printf("      Value: %d\n", unk3);
+    printf("      Value: %d\n", unk4);
+    printf("      Value: %d\n", unk5);
+    printf("      Value: %d\n", unk6);
+#endif
+
+    return data + 36;
+}
+
+static uint8 const* Parse0d(uint8 const* data)
+{
+    uint16 unk0 = *(uint16*)(data + 4);
+    uint16 unk1 = *(uint16*)(data + 6);
+    uint32 unk2 = *(uint32*)(data + 8);
+    uint32 unk3 = *(uint32*)(data + 12);
+    uint32 unk4 = *(uint32*)(data + 16);
+    uint32 tag = *(uint32*)(data + 20);
+
+#if PRINT_0d
+    printf("   0x0d - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+    printf("      Value: %d\n", unk3);
+    printf("      Value: %d\n", unk4);
+#endif
+
+    return data + 24;
+}
+
+static uint8 const* Parse10(uint8 const* data)
+{
+    uint32 unk0 = *(uint32*)(data + 4);
+    uint32 unk1 = *(uint32*)(data + 8);
+    uint32 tag = *(uint32*)(data + 12);
+
+#if PRINT_10
+    printf("   0x10 - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+#endif
+
+    return data + 16;
 }
 
 static uint8 const* Parse14(uint8 const* data)
@@ -451,6 +592,25 @@ static uint8 const* Parse14(uint8 const* data)
     return data + 24;
 }
 
+static uint8 const* Parse15(uint8 const* data)
+{
+    uint32 unk0 = *(uint32*)(data + 4);
+    uint32 unk1 = *(uint32*)(data + 8);
+    uint32 unk2 = *(uint32*)(data + 12);
+    uint32 unk3 = *(uint32*)(data + 16);
+    uint32 tag = *(uint32*)(data + 20);
+
+#if PRINT_15
+    printf("   0x15 - %08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+    printf("      Value: %d\n", unk3);
+#endif
+
+    return data + 24;
+}
+
 static uint8 const* Parse18(uint8 const* data)
 {
     uint8 unk0 = *(data + 4);
@@ -462,6 +622,16 @@ static uint8 const* Parse18(uint8 const* data)
     uint32 unk6 = *(uint32*)(data + 16);
     uint32 zlibSize = *(uint32*)(data + 20);
     uint8 const* zlib = data + 24;
+
+    if (unk2)
+    {
+        // some volume markers don't seem to store the zlib size is greater than a
+        //   given amount, this is a quick fix
+        uint8 const end[] = "\x00\x00\xff\xff";
+        uint8 const* pos = FindFirstOfSubseq(zlib, zlib + 200000, end, end + 4);
+        zlibSize = (pos - zlib) + 4;
+    }
+
     uint32 tag = *(uint32*)(zlib + zlibSize);
 
 #if PRINT_18
@@ -489,14 +659,28 @@ static uint8 const* ParseBlock(uint8 const* data)
     {
     case 0x01:
         return Parse01(data);
+    case 0x02:
+        return Parse02(data);
     case 0x03:
         return Parse03(data);
+    case 0x04:
+        return Parse04(data);
     case btText:
         return Parse05(data);
     case btTextWide:
         return Parse06(data);
+    case 0x0a:
+        return Parse0a(data);
+    case 0x0b:
+        return Parse0b(data);
+    case 0x0d:
+        return Parse0d(data);
+    case 0x10:
+        return Parse10(data);
     case 0x14:
         return Parse14(data);
+    case 0x15:
+        return Parse15(data);
     case 0x18:
         return Parse18(data);
     default:

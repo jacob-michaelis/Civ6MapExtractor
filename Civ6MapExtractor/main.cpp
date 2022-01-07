@@ -4,7 +4,7 @@
 
 #pragma comment(lib, "sqlite/sqlite3-static.lib")
 
-#define SAVE 0
+#define SAVE 6
 
 #if SAVE == 0
 char const* save = "ghaz0.Civ6Save";
