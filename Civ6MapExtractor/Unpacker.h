@@ -14,5 +14,8 @@ typedef struct SaveData
     uint8* tailEnd;
 };
 
+// exposed for utilities sake
+void SaveToFile(char const* filename, uint8 const* data, uint32 size);
+
 void UnpackSave(char const* filename, SaveData* out);
 void ReleaseSaveData(SaveData* save);

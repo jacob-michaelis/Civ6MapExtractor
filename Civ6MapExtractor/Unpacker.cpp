@@ -70,7 +70,7 @@ static int32 LoadPackedSaveData(char const* filename, uint8** out)
     return rdCnt;
 }
 
-static void SaveToFile(char const* filename, uint8 const* data, uint32 size)
+void SaveToFile(char const* filename, uint8 const* data, uint32 size)
 {
     if (!data || !size)
     {
@@ -88,10 +88,12 @@ static void SaveToFile(char const* filename, uint8 const* data, uint32 size)
 
 
     size_t written = fwrite(data, sizeof *data, size, fp);
-    fclose(fp);
 
     if (written != size)
         printf("ERROR: Not all data in the buffer was written: payload %d - written %d\n", size, written);
+    if (ferror(fp))
+        perror(NULL);
+    fclose(fp);
 }
 
 
@@ -232,7 +234,7 @@ void UnpackSave(char const* filename, SaveData* out)
 
     uint32 headerSize = zlib - data;
     uint32 zlibSize = zlibEnd - zlib;
-    uint32 tailSize = end - it;
+    uint32 tailSize = end - zlibEnd;
     printf("Header size is %d\n", headerSize);
     printf("Zlib size is %d\n", zlibSize);
     printf("Tail size is %d\n", tailSize);
@@ -267,11 +269,13 @@ void UnpackSave(char const* filename, SaveData* out)
     static const char gameDataStr[] = "_1_game_data.dat";
     static const char tailStr[] = "_2_tail.dat";
     memcpy(name + nameSize, headerStr, sizeof headerStr);
-    SaveToFile(name, data, headerSize);
+    //SaveToFile(name, data, headerSize);
     memcpy(name + nameSize, gameDataStr, sizeof gameDataStr);
-    SaveToFile(name, decompressedData, decompSize);
+    //SaveToFile(name, decompressedData, decompSize);
     memcpy(name + nameSize, tailStr, sizeof tailStr);
-    SaveToFile(name, zlibEnd, tailSize);
+    //SaveToFile(name, zlibEnd, tailSize);
+
+    free(name);
 
 
     // reallocate fitted buffers for each dataset
@@ -289,6 +293,9 @@ void UnpackSave(char const* filename, SaveData* out)
         return;
     }
 
+    memcpy(save->header, data, headerSize);
+    memcpy(save->gamedata, decompressedData, decompSize);
+    memcpy(save->tail, zlibEnd, tailSize);
     save->headerEnd = save->header + headerSize;
     save->gamedataEnd = save->gamedata + decompSize;
     save->tailEnd = save->tail + tailSize;
@@ -299,5 +306,14 @@ void UnpackSave(char const* filename, SaveData* out)
 
 void ReleaseSaveData(SaveData* save)
 {
+    free(save->header);
+    free(save->gamedata);
+    free(save->tail);
 
+    save->header = NULL;
+    save->headerEnd = NULL;
+    save->gamedata = NULL;
+    save->gamedataEnd = NULL;
+    save->tail = NULL;
+    save->tailEnd = NULL;
 }

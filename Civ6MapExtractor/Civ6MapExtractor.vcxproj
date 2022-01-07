@@ -168,6 +168,7 @@
     <ClCompile Include="Libraries\zlib\uncompr.c" />
     <ClCompile Include="Libraries\zlib\zutil.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ParseHeader.cpp" />
     <ClCompile Include="Unpacker.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="Libraries\zlib\zconf.h" />
     <ClInclude Include="Libraries\zlib\zlib.h" />
     <ClInclude Include="Libraries\zlib\zutil.h" />
+    <ClInclude Include="ParseHeader.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="Unpacker.h" />
   </ItemGroup>

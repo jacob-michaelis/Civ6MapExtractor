@@ -67,6 +67,9 @@
     <ClInclude Include="BinaryDataTools.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="ParseHeader.h">
+      <Filter>Unpacked Save Extraction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -120,6 +123,9 @@
     </ClCompile>
     <ClCompile Include="BinaryDataTools.cpp">
       <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ParseHeader.cpp">
+      <Filter>Unpacked Save Extraction</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
