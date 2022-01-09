@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BinaryDataTools.cpp" />
+    <ClCompile Include="BlockParser.cpp" />
     <ClCompile Include="Libraries\zlib\adler32.c" />
     <ClCompile Include="Libraries\zlib\compress.c" />
     <ClCompile Include="Libraries\zlib\crc32.c" />
@@ -169,10 +170,12 @@
     <ClCompile Include="Libraries\zlib\zutil.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ParseHeader.cpp" />
+    <ClCompile Include="SaveConstants.cpp" />
     <ClCompile Include="Unpacker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryDataTools.h" />
+    <ClInclude Include="BlockParser.h" />
     <ClInclude Include="Libraries\sqlite\sqlite3.h" />
     <ClInclude Include="Libraries\zlib\crc32.h" />
     <ClInclude Include="Libraries\zlib\deflate.h" />
@@ -186,6 +189,7 @@
     <ClInclude Include="Libraries\zlib\zlib.h" />
     <ClInclude Include="Libraries\zlib\zutil.h" />
     <ClInclude Include="ParseHeader.h" />
+    <ClInclude Include="SaveConstants.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="Unpacker.h" />
   </ItemGroup>

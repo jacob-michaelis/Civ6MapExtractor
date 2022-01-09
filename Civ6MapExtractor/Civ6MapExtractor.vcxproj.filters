@@ -70,6 +70,12 @@
     <ClInclude Include="ParseHeader.h">
       <Filter>Unpacked Save Extraction</Filter>
     </ClInclude>
+    <ClInclude Include="SaveConstants.h">
+      <Filter>Unpacked Save Extraction</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockParser.h">
+      <Filter>Unpacked Save Extraction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -125,6 +131,12 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="ParseHeader.cpp">
+      <Filter>Unpacked Save Extraction</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveConstants.cpp">
+      <Filter>Unpacked Save Extraction</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockParser.cpp">
       <Filter>Unpacked Save Extraction</Filter>
     </ClCompile>
   </ItemGroup>
