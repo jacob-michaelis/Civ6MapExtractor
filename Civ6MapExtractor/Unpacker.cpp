@@ -121,7 +121,7 @@ static int32 inflateZlib(uint8 const* zlib, uint8 const* zlibEnd, uint8** out)
     {
         memcpy(ins, it, CHUNK_SIZE);
         it += CHUNK_SIZE;
-        printf("   Chunk padding is: '%02x%02x%02x%02x'\n", it[0], it[1], it[2], it[3]);
+        //printf("   Chunk padding is: '%02x%02x%02x%02x'\n", it[0], it[1], it[2], it[3]);
         it += 4;
     }
 
@@ -269,11 +269,11 @@ void UnpackSave(char const* filename, SaveData* out)
     static const char gameDataStr[] = "_1_game_data.dat";
     static const char tailStr[] = "_2_tail.dat";
     memcpy(name + nameSize, headerStr, sizeof headerStr);
-    SaveToFile(name, data, headerSize);
+    //SaveToFile(name, data, headerSize);
     memcpy(name + nameSize, gameDataStr, sizeof gameDataStr);
-    SaveToFile(name, decompressedData, decompSize);
+    //SaveToFile(name, decompressedData, decompSize);
     memcpy(name + nameSize, tailStr, sizeof tailStr);
-    SaveToFile(name, zlibEnd, tailSize);
+    //SaveToFile(name, zlibEnd, tailSize);
 
     free(name);
 

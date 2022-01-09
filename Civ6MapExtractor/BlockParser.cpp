@@ -215,7 +215,7 @@ static uint8 const* Parse05(uint8 const* data)
         else
         {
             printf("      Text: ");
-            for (; text < textEnd; ++text)
+            for (; text < textEnd - 1; ++text)
                 putc(*text, stdout);
             //printf("TEXT GOES HERE");
             putc('\n', stdout);
@@ -248,7 +248,7 @@ static uint8 const* Parse06(uint8 const* data)
     if (flags == '\x21')
     {
         printf("      Text: ");
-        for (; text < textEnd; ++text)
+        for (; text < textEnd - 1; ++text)
             putwc(*text, stdout);
         //printf("TEXT GOES HERE");
         putc('\n', stdout);
