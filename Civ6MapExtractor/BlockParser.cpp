@@ -7,8 +7,6 @@
 #include "BinaryDataTools.h"
 #include "SaveConstants.h"
 
-#define DUMP_TAG_LIST
-
 //#define PRINT_LETags
 
 #define PRINT_01
@@ -39,11 +37,6 @@
 
 
 // --- Globals ----------------------------------------------------------------
-
-#ifdef DUMP_TAG_LIST
-#include <vector>
-std::vector<uint32> tags;
-#endif
 
 
 // --- Block Parsers ----------------------------------------------------------
@@ -441,9 +434,9 @@ uint8 const* ParseBlock(uint8 const* data)
     printf("   LE Tag: %02x%02x%02x%02x\n", data[0], data[1], data[2], data[3]);
 #endif
 
-#ifdef DUMP_TAG_LIST
+#ifdef TRACK_TAGS
     if (tag)
-        tags.push_back(tag);
+        TrackTag(tag);
 #endif
 
     lastTag = tag;
@@ -481,47 +474,4 @@ uint8 const* ParseBlock(uint8 const* data)
         printf("Unknown block type! Please contact me with details.");
         break;
     }
-}
-
-void DumpTags()
-{
-#ifdef DUMP_TAG_LIST
-    // filter duplicates
-    for (uint32 i = 0; i < tags.size(); ++i)
-    {
-        uint32 tag = tags[i];
-
-        uint32 j = i + 1;
-        for (; j < tags.size(); ++j)
-            if (tags[j] == tag)
-                break;
-
-        uint32 k = j + 1;
-        for (; k < tags.size(); ++k)
-            if (tags[k] != tag)
-            {
-                tags[j] = tags[k];
-                ++j;
-            }
-
-        for (; j < k; ++j)
-            tags.pop_back();
-    }
-
-
-    for (uint32 i = 0; i < tags.size(); ++i)
-    {
-        uint32 tag = tags[i];
-        uint8* leTag = (uint8*)(&tags[i]);
-
-        char num[5];
-        sprintf(num, "%04d", i);
-        char* it = num;
-        char* end = num + 3;
-        for (; it < end && *it == '0'; ++it)
-            *it = '_';
-
-        printf("   CONVERT(Unknown_%s, 0x%08x, \"%02x%02x%02x%02x\", \"NAME\", \"DESC\") \\\n", num, tag, leTag[0], leTag[1], leTag[2], leTag[3]);
-    }
-#endif
 }

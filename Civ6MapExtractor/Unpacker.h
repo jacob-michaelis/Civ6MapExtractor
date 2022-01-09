@@ -4,7 +4,7 @@
 
 #include "typedefs.h"
 
-typedef struct SaveData
+struct SaveData
 {
     uint8* header;
     uint8* headerEnd;

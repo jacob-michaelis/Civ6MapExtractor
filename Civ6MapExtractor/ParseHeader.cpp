@@ -18,6 +18,4 @@ void ParseHeader(uint8 const* header, uint8 const* headerEnd)
 
     while (it + 4 < headerEnd)
         it = ParseBlock(it);
-
-    //DumpTags();
 }

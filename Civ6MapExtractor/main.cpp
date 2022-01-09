@@ -1,6 +1,7 @@
 
 #include "Unpacker.h"
 #include "ParseHeader.h"
+#include "SaveConstants.h"
 
 #pragma comment(lib, "sqlite/sqlite3-static.lib")
 
@@ -24,11 +25,16 @@ char const* save = "pure_duel.Civ6Save";
 
 int main(int argc, char* argv[])
 {
+    InitConstants();
+
     SaveData data;
     UnpackSave(save, &data);
     ParseHeader(data.header, data.headerEnd);
 
     ReleaseSaveData(&data);
+
+    //DumpTags();
+    //DumpMissingTags();
 
     return 0;
 }

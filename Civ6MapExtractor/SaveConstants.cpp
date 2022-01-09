@@ -56,6 +56,72 @@ char const* DataTagLEID(uint32 dt)
 }
 
 
+#ifdef TRACK_TAGS
+#include <vector>
+std::vector<uint32> tags;
+
+void TrackTag(uint32 tag)
+{
+    if (std::find(tags.begin(), tags.end(), tag) == tags.end())
+        tags.push_back(tag);
+}
+
+void DumpTags()
+{
+    for (uint32 i = 0; i < tags.size(); ++i)
+    {
+        uint32 tag = tags[i];
+        uint8* leTag = (uint8*)(&tags[i]);
+
+        char num[5];
+        sprintf(num, "%04d", i);
+        char* it = num;
+        char* end = num + 3;
+        for (; it < end && *it == '0'; ++it)
+            *it = '_';
+
+        printf("    CONVERT(Unknown_%s, 0x%08x, \"%02x%02x%02x%02x\", \"NAME\", \"DESC\") \\\n", num, tag, leTag[0], leTag[1], leTag[2], leTag[3]);
+    }
+}
+
+void DumpMissingTags()
+{
+    if (tagMap.find(tags.front()) == tagMap.end())
+    {
+        if (tags.size() == 1)
+            printf("Missing tag %08x\n", tags[0]);
+        else
+            printf("Missing tag %08x before %08x\n", tags[0], tags[1]);
+    }
+
+    uint32 sizeM1 = tags.size() - 1;
+
+    for (uint32 i = 1; i < sizeM1; ++i)
+        if (tagMap.find(tags[i]) == tagMap.end())
+            printf("Missing tag %08x after %08x before %08x\n", tags[i], tags[i-1], tags[i+1]);
+
+    if (tagMap.find(tags.back()) == tagMap.end() &&
+        tags.size() != 1)
+        printf("Missing tag %08x after %08x\n", tags[sizeM1], tags[sizeM1 - 1]);
+
+    for (uint32 i = 0; i < tags.size(); ++i)
+        if (tagMap.find(tags[i]) == tagMap.end())
+        {
+            uint32 tag = tags[i];
+            uint8* leTag = (uint8*)(&tags[i]);
+
+            char num[5];
+            sprintf(num, "%04d", i);
+            char* it = num;
+            char* end = num + 3;
+            for (; it < end && *it == '0'; ++it)
+                *it = '_';
+            printf("    CONVERT(Unknown_%s, 0x%08x, \"%02x%02x%02x%02x\", \"NAME\", \"DESC\") \\\n", num, tag, leTag[0], leTag[1], leTag[2], leTag[3]);
+        }
+}
+#endif
+
+
 // Block Types
 
 // Verify everything aligns, if there is an assert BLOCK_TYPES_LIST
