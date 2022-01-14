@@ -169,7 +169,9 @@
     <ClCompile Include="Libraries\zlib\uncompr.c" />
     <ClCompile Include="Libraries\zlib\zutil.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ParseGameData.cpp" />
     <ClCompile Include="ParseHeader.cpp" />
+    <ClCompile Include="ParseTail.cpp" />
     <ClCompile Include="SaveConstants.cpp" />
     <ClCompile Include="Unpacker.cpp" />
   </ItemGroup>
@@ -188,7 +190,9 @@
     <ClInclude Include="Libraries\zlib\zconf.h" />
     <ClInclude Include="Libraries\zlib\zlib.h" />
     <ClInclude Include="Libraries\zlib\zutil.h" />
+    <ClInclude Include="ParseGameData.h" />
     <ClInclude Include="ParseHeader.h" />
+    <ClInclude Include="ParseTail.h" />
     <ClInclude Include="SaveConstants.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="Unpacker.h" />

@@ -9,6 +9,8 @@
 
 //#define PRINT_LETags
 
+#define PRINT_UNTAGGED
+
 #define PRINT_01
 #define PRINT_02
 #define PRINT_03
@@ -41,7 +43,7 @@
 
 // --- Block Parsers ----------------------------------------------------------
 
-static uint8 const* ParseJSON(uint8 const* data)
+uint8 const* ParseJSON(uint8 const* data)
 {
     if (*data != '{')
     {
@@ -110,51 +112,42 @@ static uint8 const* ParseJSON(uint8 const* data)
     return it;
 }
 
-static uint8 const* Parse01(uint8 const* data)
+uint8 const* Parse01(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
-    uint8 const* end = (data + 8);
+    uint32 unk0 = *(uint32*)(data + 8);
+    uint32 unk1 = *(uint32*)(data + 12);
+    uint32 boolData = *(uint32*)(data + 16);
 
-    for (; *(uint32*)end < 0xFF; end += 4)
-        ; // just run to the end
 
 #ifdef PRINT_01
-    printf("   0x01 - %08x\n", tag);
-    for (uint8 const* it = data + 8; it < end; it += 4)
-        printf("      Value: %d\n", *(uint32*)it);
+    printf("   0x01 - 0x%08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", boolData);
 #endif
 
-    return end;
+    return data + 20;
 }
 
-static uint8 const* Parse02(uint8 const* data)
+uint8 const* Parse02(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 unk0 = *(uint32*)(data + 8);
     uint32 unk1 = *(uint32*)(data + 12);
     uint32 unk2 = *(uint32*)(data + 16);
-    uint8 const* end = data + 20;
-    bool bonus = false;
-
-    if (*(uint32*)(end) == 0x43)
-    {
-        end += 4;
-        bonus = true;
-    }
 
 #ifdef PRINT_02
-    printf("   0x02 - %08x\n", tag);
+    printf("   0x02 - 0x%08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Value: %d\n", unk2);
-    if (bonus)
-        printf("      Value: %d\n", *(uint32*)(data + 20));
 #endif
 
-    return end;
+    return data + 20;
 }
 
-static uint8 const* Parse03(uint8 const* data)
+uint8 const* Parse03(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 unk0 = *(uint32*)(data + 8);
@@ -162,24 +155,7 @@ static uint8 const* Parse03(uint8 const* data)
     uint32 unk2 = *(uint32*)(data + 16);
 
 #ifdef PRINT_03
-    printf("   0x03 - %08x\n", tag);
-    printf("      Value: %d\n", unk0);
-    printf("      Value: %d\n", unk1);
-    printf("      Value: %08x\n", unk2);
-#endif
-
-    return data + 20;
-}
-
-static uint8 const* Parse04(uint8 const* data)
-{
-    uint32 tag = *(uint32*)(data);
-    uint32 unk0 = *(uint32*)(data + 8);
-    uint32 unk1 = *(uint32*)(data + 12);
-    uint32 unk2 = *(uint32*)(data + 16);
-
-#ifdef PRINT_04
-    printf("   0x04 - %08x\n", tag);
+    printf("   0x03 - 0x%08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Value: %d\n", unk2);
@@ -188,7 +164,24 @@ static uint8 const* Parse04(uint8 const* data)
     return data + 20;
 }
 
-static uint8 const* Parse05(uint8 const* data)
+uint8 const* Parse04(uint8 const* data)
+{
+    uint32 tag = *(uint32*)(data);
+    uint32 unk0 = *(uint32*)(data + 8);
+    uint32 unk1 = *(uint32*)(data + 12);
+    uint32 unk2 = *(uint32*)(data + 16);
+
+#ifdef PRINT_04
+    printf("   0x04 - 0x%08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+#endif
+
+    return data + 20;
+}
+
+uint8 const* Parse05(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 len = *(uint32*)(data + 8) & 0xFFFFFF;
@@ -201,7 +194,7 @@ static uint8 const* Parse05(uint8 const* data)
         textEnd += 4;
 
 #ifdef PRINT_05
-    printf("   0x05 - %08x\n", tag);
+    printf("   0x05 - 0x%08x\n", tag);
     printf("      Length:  %d\n", len);
     printf("      Flags:   0x%02x\n", flags);
     printf("      Unknown: %d\n", unk0);
@@ -230,7 +223,7 @@ static uint8 const* Parse05(uint8 const* data)
     return textEnd;
 }
 
-static uint8 const* Parse06(uint8 const* data)
+uint8 const* Parse06(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 len = *(uint32*)(data + 8) & 0xFFFFFF;
@@ -240,7 +233,7 @@ static uint8 const* Parse06(uint8 const* data)
     wchar_t const* textEnd = text + len;
 
 #ifdef PRINT_06
-    printf("   0x06 - %08x\n", tag);
+    printf("   0x06 - 0x%08x\n", tag);
     printf("      Length:  %d\n", len);
     printf("      Flags:   0x%02x\n", flags);
     printf("      Unknown: %d\n", unk0);
@@ -260,7 +253,7 @@ static uint8 const* Parse06(uint8 const* data)
     return (uint8 const*)textEnd;
 }
 
-static uint8 const* Parse0a(uint8 const* data)
+uint8 const* Parse0a(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 unk0 = *(uint32*)(data + 8);
@@ -268,7 +261,7 @@ static uint8 const* Parse0a(uint8 const* data)
     uint32 unk2 = *(uint32*)(data + 16);
 
 #ifdef PRINT_0a
-    printf("   0x0a - %08x\n", tag);
+    printf("   0x0a - 0x%08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Value: %d\n", unk2);
@@ -277,7 +270,7 @@ static uint8 const* Parse0a(uint8 const* data)
     return data + 20;
 }
 
-static uint8 const* Parse0b(uint8 const* data)
+uint8 const* Parse0b(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 unk0 = *(uint32*)(data + 8);
@@ -289,7 +282,7 @@ static uint8 const* Parse0b(uint8 const* data)
     uint32 unk6 = *(uint32*)(data + 32);
 
 #ifdef PRINT_0b
-    printf("   0x0b - %08x\n", tag);
+    printf("   0x0b - 0x%08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Value: %d\n", unk2);
@@ -303,7 +296,7 @@ static uint8 const* Parse0b(uint8 const* data)
 }
 
 // Scenario data?
-static uint8 const* Parse0d(uint8 const* data)
+uint8 const* Parse0d(uint8 const* data)
 {
     uint16 unk0 = *(uint16*)(data + 4);
     uint16 unk1 = *(uint16*)(data + 6);
@@ -313,7 +306,7 @@ static uint8 const* Parse0d(uint8 const* data)
     uint32 tag = *(uint32*)(data + 20);
 
 #ifdef PRINT_0d
-    printf("   0x0d - %08x\n", tag);
+    printf("   0x0d - 0x%08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Value: %d\n", unk2);
@@ -325,14 +318,14 @@ static uint8 const* Parse0d(uint8 const* data)
 }
 
 // Gamespeed settings?
-static uint8 const* Parse10(uint8 const* data)
+uint8 const* Parse10(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 unk0 = *(uint32*)(data + 8);
     uint32 unk1 = *(uint32*)(data + 12);
 
 #ifdef PRINT_10
-    printf("   0x10 - %08x\n", tag);
+    printf("   0x10 - 0x%08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
 #endif
@@ -341,7 +334,7 @@ static uint8 const* Parse10(uint8 const* data)
 }
 
 // Save time stamp
-static uint8 const* Parse14(uint8 const* data)
+uint8 const* Parse14(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 unk0 = *(uint32*)(data + 8);
@@ -350,7 +343,7 @@ static uint8 const* Parse14(uint8 const* data)
     uint32 unk2 = *(uint32*)(data + 20);
 
 #ifdef PRINT_14
-    printf("   0x14 - %08x\n", tag);
+    printf("   0x14 - 0x%08x\n", tag);
     printf("      Value: %08x\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Save Time (seconds since epoch): %d\n", saveTimeSinceEpoch);
@@ -360,7 +353,7 @@ static uint8 const* Parse14(uint8 const* data)
     return data + 24;
 }
 
-static uint8 const* Parse15(uint8 const* data)
+uint8 const* Parse15(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint32 unk0 = *(uint32*)(data + 8);
@@ -369,18 +362,18 @@ static uint8 const* Parse15(uint8 const* data)
     uint32 unk3 = *(uint32*)(data + 20);
 
 #ifdef PRINT_15
-    printf("   0x15 - %08x\n", tag);
-    printf("      Value: 0x%02x\n", unk0);
-    printf("      Value: 0x%02x\n", unk1);
-    printf("      Value: 0x%02x\n", unk2);
-    printf("      Value: 0x%02x\n", unk3);
+    printf("   0x15 - 0x%08x\n", tag);
+    printf("      Value: %d\n", unk0);
+    printf("      Value: %d\n", unk1);
+    printf("      Value: %d\n", unk2);
+    printf("      Value: %d\n", unk3);
 #endif
 
     return data + 24;
 }
 
 // Zlib buffers
-static uint8 const* Parse18(uint8 const* data)
+uint8 const* Parse18(uint8 const* data)
 {
     uint32 tag = *(uint32*)(data);
     uint8 unk0 = *(data + 8);
@@ -399,7 +392,7 @@ static uint8 const* Parse18(uint8 const* data)
     uint32 zlibSize = (pos - zlib) + 4;
 
 #ifdef PRINT_18
-    printf("   0x18 - %08x\n", tag);
+    printf("   0x18 - 0x%08x\n", tag);
     printf("      Value: %d\n", unk0);
     printf("      Value: %d\n", unk1);
     printf("      Value: %d\n", unk2);
@@ -416,18 +409,37 @@ static uint8 const* Parse18(uint8 const* data)
     return zlib + zlibSize;
 }
 
+uint8 const* ParseUntaggedData(uint32 lastTag, uint32 lastType, uint8 const* data)
+{
+    // seems like a normal value just w/o tags
+    if (*(uint32*)data == 0x0a)
+        return Parse0a(data - 4);
+
+#ifdef PRINT_UNTAGGED
+    printf("   Untagged data found after tag 0x%08x (data type 0x%02x):\n", lastTag, lastType);
+#endif
+
+    while (*(uint32*)data < 0x00FFFFFF)
+    {
+#ifdef PRINT_UNTAGGED
+        printf("      Value: %d\n", *(uint32*)data);
+#endif
+        data += 4;
+    }
+
+    return data;
+}
+
 
 // --- Interface --------------------------------------------------------------
 
 uint8 const* ParseBlock(uint8 const* data)
 {
     static uint32 lastTag = 0;
+    static uint32 lastType = 0;
+    if (*(uint32*)(data) < 0x00FFFFFF)
+        data = ParseUntaggedData(lastTag, lastType, data);
     uint32 tag = *(uint32*)(data);
-    if (tag < btEND)
-    {
-        tag = 0x0;
-        data -= 4;
-    }
     uint32 blockType = *(uint32*)(data + 4);
 
 #ifdef PRINT_LETags
@@ -435,16 +447,16 @@ uint8 const* ParseBlock(uint8 const* data)
 #endif
 
 #ifdef TRACK_TAGS
-    if (tag)
-        TrackTag(tag);
+    TrackTag(tag);
 #endif
 
     lastTag = tag;
+    lastType = blockType;
 
 
     switch (blockType)
     {
-    case bt01_t:
+    case bt01_Bool:
         return Parse01(data);
     case bt02_t:
         return Parse02(data);

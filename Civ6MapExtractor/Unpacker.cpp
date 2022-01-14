@@ -14,6 +14,9 @@
 #include "BinaryDataTools.h"
 
 
+#define ITER_ZLIBS
+
+
 // --- Constants --------------------------------------------------------------
 
 #define ZLIB_COMPR_LOW "\x78\x01"
@@ -103,9 +106,13 @@ static int32 inflateZlib(uint8 const* zlib, uint8 const* zlibEnd, uint8** out)
 {
     size_t srcSize = zlibEnd - zlib;
     size_t srcChunks = srcSize / CHUNK_SIZE;
-    size_t srcRemnant = srcSize % CHUNK_SIZE;
+    size_t srcRemnant = (srcSize % CHUNK_SIZE);
+    if (srcRemnant)
+        srcRemnant -= 4 * srcChunks;
+    else if (srcChunks)
+        srcRemnant -= 4 * (srcChunks - 1);
     // data chunks + last chunk but sans chunk buffer of 4 bytes
-    size_t packedSize = srcChunks * CHUNK_SIZE + srcRemnant - 4 * srcChunks;
+    size_t packedSize = (srcChunks * CHUNK_SIZE) + srcRemnant;
 
     uint8* packedData = (uint8*)malloc(packedSize);
     if (!packedData)
@@ -121,9 +128,12 @@ static int32 inflateZlib(uint8 const* zlib, uint8 const* zlibEnd, uint8** out)
     {
         memcpy(ins, it, CHUNK_SIZE);
         it += CHUNK_SIZE;
-        //printf("   Chunk padding is: '%02x%02x%02x%02x'\n", it[0], it[1], it[2], it[3]);
+        printf("   Chunk padding is: '%02x%02x%02x%02x'\n", it[0], it[1], it[2], it[3]);
         it += 4;
     }
+
+    if (srcRemnant)
+        memcpy(ins, it, srcRemnant);
 
 
     // allocate a 1 MB buffer for decompressing data
@@ -141,6 +151,7 @@ static int32 inflateZlib(uint8 const* zlib, uint8 const* zlibEnd, uint8** out)
     strm.avail_in = packedSize;
     strm.next_out = decompressed;
     strm.avail_out = quarterGB;
+    strm.total_out = quarterGB;
     strm.zalloc = Z_NULL;
     strm.zfree = Z_NULL;
     strm.opaque = Z_NULL;
@@ -204,6 +215,65 @@ void UnpackSave(char const* filename, SaveData* out)
     uint8 const* it = data;
     uint8 const* end = data + len;
 
+#if defined(ITER_ZLIBS)
+    uint8 const* zlib0 = FindFirstOfSubseq(it, end, zlibStartSeq, zlibStartSeqEnd);
+    if (!zlib0)
+    {
+        printf("ERROR: Couldn't find start of zlib, bad file\n");
+        return;
+    }
+    uint8 const* zlib0End = FindFirstOfSubseq(zlib0, end, zlibEndSeq, zlibEndSeqEnd);
+    if (!zlib0End)
+    {
+        printf("ERROR: Couldn't find end of zlib, bad file\n");
+        return;
+    }
+    zlib0End += zlibEndLen;
+
+    uint8 const* zlib1 = FindFirstOfSubseq(zlib0End, end, zlibStartSeq, zlibStartSeqEnd);
+    if (!zlib1)
+    {
+        printf("ERROR: Couldn't find start of zlib, bad file\n");
+        return;
+    }
+    uint8 const* zlib1End = FindFirstOfSubseq(zlib1, end, zlibEndSeq, zlibEndSeqEnd);
+    if (!zlib1End)
+    {
+        printf("ERROR: Couldn't find end of zlib, bad file\n");
+        return;
+    }
+    zlib1End += zlibEndLen;
+
+    uint8 const* zlib2 = FindFirstOfSubseq(zlib1End, end, zlibStartSeq, zlibStartSeqEnd);
+    if (!zlib2)
+    {
+        printf("ERROR: Couldn't find start of zlib, bad file\n");
+        return;
+    }
+    uint8 const* zlib2End = FindFirstOfSubseq(zlib2, end, zlibEndSeq, zlibEndSeqEnd);
+    if (!zlib2End)
+    {
+        printf("ERROR: Couldn't find end of zlib, bad file\n");
+        return;
+    }
+    zlib2End += zlibEndLen;
+
+    uint8* decompressedData0 = NULL;
+    uint32 decompSize0 = inflateZlib(zlib0, zlib0End, &decompressedData0);
+    uint8* decompressedData1 = NULL;
+    uint32 decompSize1 = inflateZlib(zlib1, zlib1End, &decompressedData1);
+    uint8* decompressedData2 = NULL;
+    uint32 decompSize2 = inflateZlib(zlib2, zlib2End, &decompressedData2);
+
+    if (!strncmp((char*)decompressedData2, "DDS", 3))
+        it = zlib2End;
+    else if (!strncmp((char*)decompressedData1, "DDS", 3))
+        it = zlib1End;
+    else if (!strncmp((char*)decompressedData0, "DDS", 3))
+        it = zlib0End;
+    else
+        it = data;
+#else
     // find Barbarians to get past the initial blocks
     uint8 const barbarians[] = "LOC_CIVILIZATION_BARBARIAN_DESCRIPTION";
     uint8 const barbariansLen = sizeof barbarians - 1;
@@ -217,6 +287,7 @@ void UnpackSave(char const* filename, SaveData* out)
         printf("   %s found at offset %d\n", barbarians, title - data);
         it = title + barbariansLen;
     }
+#endif
 
     uint8 const* zlib = FindFirstOfSubseq(it, end, zlibStartSeq, zlibStartSeqEnd);
     if (!zlib)
@@ -268,12 +339,26 @@ void UnpackSave(char const* filename, SaveData* out)
     static const char headerStr[] = "_0_header.dat";
     static const char gameDataStr[] = "_1_game_data.dat";
     static const char tailStr[] = "_2_tail.dat";
-    memcpy(name + nameSize, headerStr, sizeof headerStr);
+
+    //memcpy(name + nameSize, headerStr, sizeof headerStr);
     //SaveToFile(name, data, headerSize);
     memcpy(name + nameSize, gameDataStr, sizeof gameDataStr);
-    //SaveToFile(name, decompressedData, decompSize);
-    memcpy(name + nameSize, tailStr, sizeof tailStr);
+    SaveToFile(name, decompressedData, decompSize);
+    //memcpy(name + nameSize, tailStr, sizeof tailStr);
     //SaveToFile(name, zlibEnd, tailSize);
+
+#if defined(ITER_ZLIBS)
+    static const char zlib0Str[] = "_3_civ_icon.dds";
+    static const char zlib1Str[] = "_4_map_preview.dds";
+    static const char zlib2Str[] = "_5_leader_portrait.dds";
+
+    //memcpy(name + nameSize, zlib0Str, sizeof zlib0Str);
+    //SaveToFile(name, decompressedData0, decompSize0);
+    //memcpy(name + nameSize, zlib1Str, sizeof zlib1Str);
+    //SaveToFile(name, decompressedData1, decompSize1);
+    //memcpy(name + nameSize, zlib2Str, sizeof zlib2Str);
+    //SaveToFile(name, decompressedData2, decompSize2);
+#endif
 
     free(name);
 

@@ -10,90 +10,90 @@
 
 #pragma region Data Tags List
 #define DATA_TAG_LIST \
-    CONVERT(Unknown____0,      0x05d9b099, "99b0d905", "NAME", "DESC") \
-    CONVERT(Unknown____1,      0x0b835c40, "405c830b", "NAME", "DESC") \
-    CONVERT(Unknown____2,      0x0efe6d64, "646dfe0e", "NAME", "DESC") \
+    CONVERT(GameSpeed,         0x05d9b099, "99b0d905", "Game Speed", "DESC") \
+    CONVERT(MapSize,           0x0b835c40, "405c830b", "Map Size", "DESC") \
+    CONVERT(SaveTime,          0x0efe6d64, "646dfe0e", "Save Time", "DESC") \
     CONVERT(DifficultyLoc,     0x0f32e71d, "1de7320f", "Difficulty Localization", "DESC") \
-    CONVERT(Unknown____4,      0x12f52ff3, "f32ff512", "NAME", "DESC") \
+    CONVERT(EraLoc,            0x12f52ff3, "f32ff512", "Era Localization", "DESC") \
     CONVERT(Unknown____5,      0x1ab13eef, "ef3eb11a", "NAME", "DESC") \
-    CONVERT(Unknown____6,      0x1e4c13b0, "b0134c1e", "NAME", "DESC") \
-    CONVERT(Unknown____7,      0x306f37f9, "f9376f30", "NAME", "DESC") \
-    CONVERT(Unknown____8,      0x3a0545da, "da45053a", "NAME", "DESC") \
+    CONVERT(SaveName,          0x1e4c13b0, "b0134c1e", "Save Name", "DESC") \
+    CONVERT(Platform,          0x306f37f9, "f9376f30", "Platform", "DESC") \
+    CONVERT(BuildVersion,      0x3a0545da, "da45053a", "Civ Build Version", "DESC") \
     CONVERT(Unknown____9,      0x414c0cdc, "dc0c4c41", "NAME", "DESC") \
-    CONVERT(Unknown___10,      0x584c6027, "27604c58", "NAME", "DESC") \
+    CONVERT(MapScriptLoc,      0x584c6027, "27604c58", "Map Script Localization", "DESC") \
     CONVERT(Unknown___11,      0x61a61beb, "eb1ba661", "NAME", "DESC") \
-    CONVERT(Unknown___12,      0x6bb7b2a1, "a1b2b76b", "NAME", "DESC") \
-    CONVERT(PlayerCivLoc,      0x760a632a, "2a630a76", "Player Civ Localization", "DESC") \
+    CONVERT(PlayerLeaderName,  0x6bb7b2a1, "a1b2b76b", "Player Leader's Name", "DESC") \
+    CONVERT(PlayerCivNameLoc,  0x760a632a, "2a630a76", "Player Civ Name Localization", "DESC") \
     CONVERT(Unknown___14,      0x7c546f81, "816f547c", "NAME", "DESC") \
-    CONVERT(Unknown___15,      0x7fb416a8, "a816b47f", "NAME", "DESC") \
+    CONVERT(DifficultyType,    0x7fb416a8, "a816b47f", "Difficulty Type", "DESC") \
     CONVERT(Unknown___16,      0x83f18cef, "ef8cf183", "NAME", "DESC") \
     CONVERT(Unknown___17,      0x8427ae5c, "5cae2784", "NAME", "DESC") \
     CONVERT(ModUID,            0x04c45f54, "545fc404", "Mod UID", "The (unique) id the mod uses.") \
     CONVERT(ModTitleLoc,       0x3034e172, "72e13430", "Mod Title Localization", "DESC") \
-    CONVERT(Unknown___20,      0x6db0f592, "92f5b06d", "NAME", "DESC") \
-    CONVERT(ModData,           0xf4580710, "100758f4", "Unknown Mod Data", "Unknown mod data. Commonly 1, sometimes significantly larger.") \
+    CONVERT(SubscriptionID,    0x6db0f592, "92f5b06d", "Steam Mod Subscription ID", "DESC") \
+    CONVERT(Unknown___21,      0xf4580710, "100758f4", "Unknown Mod Data", "Always seems to be set to 1. Also always followed by a section without a tag.") \
     CONVERT(Unknown___22,      0x85988715, "15879885", "NAME", "DESC") \
     CONVERT(Unknown___23,      0x88305ebb, "bb5e3088", "NAME", "DESC") \
-    CONVERT(Unknown___23a,     0x914207b3, "b3074291", "NAME", "DESC") \
+    CONVERT(Unknown___23a,     0x914207b3, "b3074291", "NAME", "A Zlib id?") \
     CONVERT(Unknown___24,      0x9dbcda95, "95dabc9d", "NAME", "DESC") \
-    CONVERT(Unknown___25,      0xa69b93cd, "cd939ba6", "NAME", "DESC") \
-    CONVERT(Unknown___26,      0xaf9ae4bb, "bbe49aaf", "NAME", "DESC") \
-    CONVERT(Unknown___27,      0xbde62c9d, "9d2ce6bd", "NAME", "DESC") \
-    CONVERT(Unknown___28,      0xc45925de, "de2559c4", "NAME", "DESC") \
-    CONVERT(Unknown___29,      0xd028a431, "31a428d0", "NAME", "DESC") \
-    CONVERT(Unknown___30,      0xd2760820, "200876d2", "NAME", "DESC") \
+    CONVERT(MapSizeLoc,        0xa69b93cd, "cd939ba6", "Map Size Localization", "DESC") \
+    CONVERT(PlayerCiv,         0xaf9ae4bb, "bbe49aaf", "Player Civ Name", "DESC") \
+    CONVERT(TurnNumber,        0xbde62c9d, "9d2ce6bd", "Turn Number", "DESC") \
+    CONVERT(Ruleset,           0xc45925de, "de2559c4", "Ruleset", "DESC") \
+    CONVERT(ExpansionLoc,      0xd028a431, "31a428d0", "Gathering Storm Expansion Localization", "DESC") \
+    CONVERT(Unknown___30,      0xd2760820, "200876d2", "NAME", "A Zlib id?") \
     CONVERT(Unknown___31,      0xdfdd68b5, "b568dddf", "NAME", "DESC") \
-    CONVERT(Unknown___32,      0xe7170e55, "550e17e7", "NAME", "DESC") \
-    CONVERT(Unknown___33,      0xefca224e, "4e22caef", "NAME", "DESC") \
-    CONVERT(Unknown___34,      0xf4e540d8, "d840e5f4", "NAME", "DESC") \
+    CONVERT(Era,               0xe7170e55, "550e17e7", "Era", "DESC") \
+    CONVERT(TurnNumber1,       0xefca224e, "4e22caef", "Turn Number 1", "DESC") \
+    CONVERT(Unknown___34,      0xf4e540d8, "d840e5f4", "NAME", "Player UID?") \
     CONVERT(GameSpeedLoc,      0xfad3d4c3, "c3d4d3fa", "Game Speed Localization", "DESC") \
     CONVERT(Unknown___36,      0x28595599, "99555928", "NAME", "DESC") \
     CONVERT(Unknown___37,      0x7f3868a7, "a768387f", "NAME", "DESC") \
     CONVERT(Unknown___38,      0xecce7256, "5672ceec", "NAME", "DESC") \
     CONVERT(Unknown___39,      0x012727cc, "cc272701", "NAME", "DESC") \
-    CONVERT(Unknown___40,      0x1a96522f, "2f52961a", "NAME", "DESC") \
+    CONVERT(TurnNumber2,       0x1a96522f, "2f52961a", "Turn Number 2", "DESC") \
     CONVERT(Unknown___41,      0x4c7fba58, "58ba7f4c", "NAME", "DESC") \
     CONVERT(Unknown___42,      0x542a02a2, "a2022a54", "NAME", "DESC") \
-    CONVERT(Unknown___43,      0x6288eb31, "31eb8862", "NAME", "DESC") \
+    CONVERT(CivAdjective,      0x6288eb31, "31eb8862", "Civ Adjective", "DESC") \
     CONVERT(Unknown___44,      0x830ffc46, "46fc0f83", "NAME", "DESC") \
     CONVERT(Unknown___45,      0x93644fa6, "a64f6493", "NAME", "DESC") \
-    CONVERT(Unknown___46,      0x9d5e5c2f, "2f5c5e9d", "NAME", "DESC") \
+    CONVERT(CivName,           0x9d5e5c2f, "2f5c5e9d", "Civ Name", "DESC") \
     CONVERT(Unknown___47,      0xa4bd04b1, "b104bda4", "NAME", "DESC") \
     CONVERT(Unknown___48,      0xac94bcee, "eebc94ac", "NAME", "DESC") \
-    CONVERT(Unknown___49,      0xb3ea1140, "4011eab3", "NAME", "DESC") \
-    CONVERT(Unknown___50,      0xc643aa0f, "0faa43c6", "NAME", "DESC") \
+    CONVERT(CivNameLoc,        0xb3ea1140, "4011eab3", "Civ Name Localization", "DESC") \
+    CONVERT(CivAgenda,         0xc643aa0f, "0faa43c6", "Civ Agenda", "DESC") \
     CONVERT(Unknown___51,      0xc7d7515b, "5b51d7c7", "NAME", "DESC") \
-    CONVERT(Unknown___52,      0xca55abbe, "beab55ca", "NAME", "DESC") \
+    CONVERT(CivLevel,          0xca55abbe, "beab55ca", "Civ Level", "Full vs City State vs Barbarian vs Free") \
     CONVERT(Unknown___53,      0xce42b995, "95b942ce", "NAME", "DESC") \
     CONVERT(Unknown___54,      0xd08444c1, "c14484d0", "NAME", "DESC") \
     CONVERT(Unknown___55,      0xdfe4fcc7, "c7fce4df", "NAME", "DESC") \
-    CONVERT(Unknown___56,      0xe8cd5e5f, "5f5ecde8", "NAME", "DESC") \
-    CONVERT(Unknown___57,      0xf043351a, "1a3543f0", "NAME", "DESC") \
-    CONVERT(Unknown___58,      0xff9b1965, "65199bff", "NAME", "DESC") \
+    CONVERT(CivLeaderName,     0xe8cd5e5f, "5f5ecde8", "Civ Leader Name", "DESC") \
+    CONVERT(CivLeaderNameLoc,  0xf043351a, "1a3543f0", "Civ Leader Name Localization", "DESC") \
+    CONVERT(CivDescription,    0xff9b1965, "65199bff", "Civ Description", "DESC") \
     CONVERT(Unknown___59,      0x064ae3d5, "d5e34a06", "NAME", "DESC") \
     CONVERT(Unknown___60,      0x0b57e31f, "1fe3570b", "NAME", "DESC") \
     CONVERT(Unknown___61,      0x0d8ab454, "54b48a0d", "NAME", "DESC") \
-    CONVERT(Unknown___62,      0x8b83723f, "3f72838b", "NAME", "DESC") \
-    CONVERT(Unknown___63,      0xcfaf60ef, "ef60afcf", "NAME", "DESC") \
-    CONVERT(Unknown___64,      0x1258ab5e, "5eab5812", "NAME", "DESC") \
-    CONVERT(Unknown___65,      0x15db77c5, "c577db15", "NAME", "DESC") \
-    CONVERT(Unknown___66,      0x4fe363bb, "bb63e34f", "NAME", "DESC") \
+    CONVERT(AILogicInitCode,   0x8b83723f, "3f72838b", "AI Logic Initializaiton Code", "Just a guess really, seems to be for setting the AI demand vector.") \
+    CONVERT(Unknown___63,      0xcfaf60ef, "ef60afcf", "NAME", "Number of free cities?") \
+    CONVERT(Unknown___64,      0x1258ab5e, "5eab5812", "NAME", "Free cities value?") \
+    CONVERT(Promises,          0x15db77c5, "c577db15", "Promises Initialization Code", "DESC") \
+    CONVERT(Unknown___66,      0x4fe363bb, "bb63e34f", "NAME", "Civ player group?") \
     CONVERT(Unknown___67,      0x62a7dfa6, "a6dfa762", "NAME", "DESC") \
     CONVERT(Unknown___68,      0x6e7cd16c, "6cd17c6e", "NAME", "DESC") \
     CONVERT(Unknown___69,      0x7ab021cb, "cb21b07a", "NAME", "DESC") \
-    CONVERT(Unknown___70,      0x8e72249a, "9a24728e", "NAME", "DESC") \
-    CONVERT(Unknown___71,      0xa550f7b7, "b7f750a5", "NAME", "DESC") \
-    CONVERT(Unknown___72,      0xcdbd103d, "3d10bdcd", "NAME", "DESC") \
+    CONVERT(SteamID,           0x8e72249a, "9a24728e", "Steam ID", "Only shows up in multiplayer.") \
+    CONVERT(TraderAutomation,  0xa550f7b7, "b7f750a5", "Trader Automation Setters", "DESC") \
+    CONVERT(Unknown___72,      0xcdbd103d, "3d10bdcd", "NAME", "Civ player group?") \
     CONVERT(Unknown___73,      0xce1b9dc2, "c29d1bce", "NAME", "DESC") \
-    CONVERT(Unknown___74,      0xd2ed3156, "5631edd2", "NAME", "DESC") \
-    CONVERT(Unknown___75,      0xdab96bfd, "fd6bb9da", "NAME", "DESC") \
-    CONVERT(Unknown___76,      0xf17b5a0b, "0b5a7bf1", "NAME", "DESC") \
+    CONVERT(LeaderPool,        0xd2ed3156, "5631edd2", "Leader Pool", "DESC") \
+    CONVERT(MultiplayerName,   0xdab96bfd, "fd6bb9da", "Multiplayer Name", "Steam name it seems. Only shows up in multiplayer games.") \
+    CONVERT(TraderDetails,     0xf17b5a0b, "0b5a7bf1", "Trader Details", "DESC") \
     CONVERT(Unknown___77,      0xf85bf1dc, "dcf15bf8", "NAME", "DESC") \
     CONVERT(Unknown___78,      0xfc7b1f66, "661f7bfc", "NAME", "DESC") \
     CONVERT(Unknown___79,      0x15356f47, "476f3515", "NAME", "DESC") \
     CONVERT(Unknown___80,      0x183c168d, "8d163c18", "NAME", "DESC") \
-    CONVERT(Unknown___80a,     0x52e755c8, "c855e752", "NAME", "DESC") \
-    CONVERT(Unknown___80b,     0x9278e97c, "7ce97892", "NAME", "DESC") \
+    CONVERT(Unknown___80a,     0x52e755c8, "c855e752", "NAME", "Scenario data") \
+    CONVERT(ScenarioEra,       0x9278e97c, "7ce97892", "Scenario Era", "DESC") \
     CONVERT(Unknown___81,      0x1c83236c, "6c23831c", "NAME", "DESC") \
     CONVERT(Unknown___82,      0x1f51d294, "94d2511f", "NAME", "DESC") \
     CONVERT(Unknown___83,      0x207ab0dc, "dcb07a20", "NAME", "DESC") \
@@ -125,36 +125,36 @@
     CONVERT(Unknown__109,      0x10991451, "51149910", "NAME", "DESC") \
     CONVERT(Unknown__109a,     0x2193fea0, "a0fe9321", "NAME", "DESC") \
     CONVERT(Unknown__110,      0x2fda36b3, "b336da2f", "NAME", "DESC") \
-    CONVERT(Unknown__111,      0x35069524, "24950635", "NAME", "DESC") \
+    CONVERT(MapNameLoc,        0x35069524, "24950635", "Map Name Localization", "DESC") \
     CONVERT(Unknown__112,      0x3a51e241, "41e2513a", "NAME", "DESC") \
     CONVERT(Unknown__112a,     0x8a846684, "8466848a", "NAME", "DESC") \
     CONVERT(Unknown__113,      0x6086aa70, "70aa8660", "NAME", "DESC") \
     CONVERT(Unknown__114,      0x63592b7d, "7d2b5963", "NAME", "DESC") \
-    CONVERT(Unknown__115,      0x63d8875a, "5a87d863", "NAME", "DESC") \
+    CONVERT(MapScript,         0x63d8875a, "5a87d863", "Map Script", "The name of the map script file.") \
     CONVERT(Unknown__115a,     0x8a846684, "8466848a", "NAME", "DESC") \
     CONVERT(Unknown__116,      0x8c84e73d, "3de7848c", "NAME", "DESC") \
     CONVERT(Unknown__117,      0x8ed4029c, "9c02d48e", "NAME", "DESC") \
-    CONVERT(Unknown__118,      0x96c5c77c, "7cc7c596", "NAME", "DESC") \
+    CONVERT(MapSeed,           0x96c5c77c, "7cc7c596", "NAME", "DESC") \
     CONVERT(Unknown__119,      0x990f33cf, "cf330f99", "NAME", "DESC") \
     CONVERT(Unknown__120,      0x9ce5cf48, "48cfe59c", "NAME", "DESC") \
     CONVERT(Unknown__120a,     0xc4027ce3, "e37c02c4", "NAME", "DESC") \
-    CONVERT(Unknown__121,      0xb0301f02, "021f30b0", "NAME", "DESC") \
-    CONVERT(Unknown__122,      0xd8f01e6b, "6b1ef0d8", "NAME", "DESC") \
+    CONVERT(PW6Placement,      0xb0301f02, "021f30b0", "PW6 Placement String", "DESC") \
+    CONVERT(MapGroup,          0xd8f01e6b, "6b1ef0d8", "Map Group", "DESC") \
     CONVERT(Unknown__123,      0x81354737, "37473581", "NAME", "DESC") \
     CONVERT(Unknown__124,      0x8658832e, "2e835886", "NAME", "DESC") \
     CONVERT(Unknown__125,      0x871d5b63, "635b1d87", "NAME", "DESC") \
     CONVERT(Unknown__126,      0x0181b2c8, "c8b28101", "NAME", "DESC") \
     CONVERT(Unknown__127,      0x22915cc4, "c45c9122", "NAME", "DESC") \
     CONVERT(Unknown__128,      0x3dd3e690, "90e6d33d", "NAME", "DESC") \
-    CONVERT(Unknown__129,      0x45e0d83a, "3ad8e045", "NAME", "DESC") \
+    CONVERT(MapLensColorName,  0x45e0d83a, "3ad8e045", "Map Lens Color Name", "DESC") \
     CONVERT(Unknown__130,      0x76d45762, "6257d476", "NAME", "DESC") \
     CONVERT(Unknown__131,      0xbe4db7fa, "fab74dbe", "NAME", "DESC") \
     CONVERT(Unknown__132,      0xc1fb9a75, "759afbc1", "NAME", "DESC") \
-    CONVERT(Unknown__133,      0xd31307e8, "e80713d3", "NAME", "DESC") \
+    CONVERT(MapLensColorName2, 0xd31307e8, "e80713d3", "Map Lens Color Name", "Appears to be the exact same as 0x45e0d83a") \
     CONVERT(Unknown__134,      0xeea43eda, "da3ea4ee", "NAME", "DESC") \
     CONVERT(Unknown__135,      0xeedee991, "91e9deee", "NAME", "DESC") \
     CONVERT(Unknown__136,      0x025347f3, "f3475302", "NAME", "DESC") \
-    CONVERT(Unknown__137,      0x04ee548c, "8c54ee04", "NAME", "DESC") \
+    CONVERT(GameSeed,          0x04ee548c, "8c54ee04", "NAME", "DESC") \
     CONVERT(Unknown__138,      0x0623e593, "93e52306", "NAME", "DESC") \
     CONVERT(Unknown__139,      0x075f5ee6, "e65e5f07", "NAME", "DESC") \
     CONVERT(Unknown__140,      0x0a34ebf6, "f6eb340a", "NAME", "DESC") \
@@ -162,7 +162,7 @@
     CONVERT(Unknown__142,      0x0a8090bd, "bd90800a", "NAME", "DESC") \
     CONVERT(Unknown__143,      0x0cf10074, "7400f10c", "NAME", "DESC") \
     CONVERT(Unknown__144,      0x0f639ddd, "dd9d630f", "NAME", "DESC") \
-    CONVERT(Unknown__145,      0x10204a26, "264a2010", "NAME", "DESC") \
+    CONVERT(AILeaderPriority,  0x10204a26, "264a2010", "AI Leader Planning Priority", "DESC") \
     CONVERT(Unknown__146,      0x14ced3a9, "a9d3ce14", "NAME", "DESC") \
     CONVERT(Unknown__147,      0x150c2d79, "792d0c15", "NAME", "DESC") \
     CONVERT(Unknown__148,      0x18320c5d, "5d0c3218", "NAME", "DESC") \
@@ -189,8 +189,8 @@
     CONVERT(Unknown__169,      0x26f28110, "1081f226", "NAME", "DESC") \
     CONVERT(Unknown__170,      0x2861dc77, "77dc6128", "NAME", "DESC") \
     CONVERT(Unknown__171,      0x2889561d, "1d568928", "NAME", "DESC") \
-    CONVERT(Unknown__172,      0x2a0aa4e7, "e7a40a2a", "NAME", "DESC") \
-    CONVERT(Unknown__173,      0x2c00308b, "8b30002c", "NAME", "DESC") \
+    CONVERT(TurnNumber3,       0x2a0aa4e7, "e7a40a2a", "Turn Number 3", "Seems to be a Turn Number value specifically used by AI.") \
+    CONVERT(GameSpeedLocColor, 0x2c00308b, "8b30002c", "Game Speed Localization Color", "DESC") \
     CONVERT(Unknown__174,      0x2da0d993, "93d9a02d", "NAME", "DESC") \
     CONVERT(Unknown__175,      0x2e74e6b0, "b0e6742e", "NAME", "DESC") \
     CONVERT(Unknown__176,      0x2f0c186e, "6e180c2f", "NAME", "DESC") \
@@ -199,7 +199,7 @@
     CONVERT(Unknown__179,      0x32f760fb, "fb60f732", "NAME", "DESC") \
     CONVERT(Unknown__180,      0x339b9b70, "709b9b33", "NAME", "DESC") \
     CONVERT(Unknown__181,      0x342ef01f, "1ff02e34", "NAME", "DESC") \
-    CONVERT(Unknown__182,      0x34a1e258, "58e2a134", "NAME", "DESC") \
+    CONVERT(Ruleset2,          0x34a1e258, "58e2a134", "Ruleset", "Appears to be the same as 0xc45925de") \
     CONVERT(Unknown__183,      0x34d42492, "9224d434", "NAME", "DESC") \
     CONVERT(Unknown__184,      0x3619a55e, "5ea51936", "NAME", "DESC") \
     CONVERT(Unknown__185,      0x36f3f119, "19f1f336", "NAME", "DESC") \
@@ -218,6 +218,7 @@
     CONVERT(Unknown__198,      0x4c8f8e79, "798e8f4c", "NAME", "DESC") \
     CONVERT(Unknown__199,      0x4d4186f4, "f486414d", "NAME", "DESC") \
     CONVERT(Unknown__200,      0x4ed018d3, "d318d04e", "NAME", "DESC") \
+\
     CONVERT(Unknown__201,      0x4ee5580e, "0e58e54e", "NAME", "DESC") \
     CONVERT(Unknown__202,      0x4f5f0ec8, "c80e5f4f", "NAME", "DESC") \
     CONVERT(Unknown__203,      0x4f8bf860, "60f88b4f", "NAME", "DESC") \
@@ -294,7 +295,7 @@
     CONVERT(Unknown__274,      0xb03423cf, "cf2334b0", "NAME", "DESC") \
     CONVERT(Unknown__275,      0xb0d1addb, "dbadd1b0", "NAME", "DESC") \
     CONVERT(Unknown__276,      0xb1688dcd, "cd8d68b1", "NAME", "DESC") \
-    CONVERT(Unknown__277,      0xb1a8c297, "97c2a8b1", "NAME", "DESC") \
+    CONVERT(GameYear,          0xb1a8c297, "97c2a8b1", "Game Year", "The simulated year of the game") \
     CONVERT(Unknown__278,      0xb284a26e, "6ea284b2", "NAME", "DESC") \
     CONVERT(Unknown__279,      0xb3946deb, "eb6d94b3", "NAME", "DESC") \
     CONVERT(Unknown__280,      0xb60549d4, "d44905b6", "NAME", "DESC") \
@@ -464,7 +465,7 @@ void DumpMissingTags();
 #pragma region Block Types List
 #define BLOCK_TYPE_LIST \
     CONVERT(t, 00) \
-    CONVERT(t, 01) \
+    CONVERT(Bool, 01) \
     CONVERT(t, 02) \
     CONVERT(t, 03) \
     CONVERT(t, 04) \

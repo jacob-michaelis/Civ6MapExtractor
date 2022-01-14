@@ -1,5 +1,5 @@
 #pragma once
-//#pragma warning( disable :  )
+#pragma warning( disable :  6328 )
 
 #define _USE_MATH_DEFINES
 #define _CRT_SECURE_NO_WARNINGS
