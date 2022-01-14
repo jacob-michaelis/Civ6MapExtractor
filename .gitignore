@@ -354,6 +354,10 @@ MigrationBackup/
 *.Civ6Save.bin
 *.Civ6Map
 *.dat
+*.json
+
+# Debug
 *.dump
 *.hexdump
-*.json
+*_to_bytes.bat
+*out.txt
