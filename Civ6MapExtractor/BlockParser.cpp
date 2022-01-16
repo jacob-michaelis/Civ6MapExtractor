@@ -486,4 +486,6 @@ uint8 const* ParseBlock(uint8 const* data)
         printf("Unknown block type! Please contact me with details.");
         break;
     }
+
+    return NULL;
 }
