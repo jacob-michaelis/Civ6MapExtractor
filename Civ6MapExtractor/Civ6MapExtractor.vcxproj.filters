@@ -82,6 +82,9 @@
     <ClInclude Include="ParseTail.h">
       <Filter>Unpacked Save Extraction</Filter>
     </ClInclude>
+    <ClInclude Include="LoadSQLiteConstants.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -150,6 +153,9 @@
     </ClCompile>
     <ClCompile Include="ParseTail.cpp">
       <Filter>Unpacked Save Extraction</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadSQLiteConstants.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

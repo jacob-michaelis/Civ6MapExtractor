@@ -4,6 +4,7 @@
 
 #include "typedefs.h"
 
+
 struct SaveData
 {
     uint8* header;

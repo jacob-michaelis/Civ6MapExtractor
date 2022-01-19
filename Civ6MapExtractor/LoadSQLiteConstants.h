@@ -1,0 +1,90 @@
+#pragma once
+
+#include "typedefs.h"
+
+
+#define HASH_KIND_LIST \
+    CONVERT(ABILITY) \
+    CONVERT(BARBARIAN_TRIBE) \
+    CONVERT(BELIEF) \
+    CONVERT(BUILDING) \
+    CONVERT(CAPABILITY) \
+    CONVERT(CIVIC) \
+    CONVERT(CIVILIZATION) \
+    CONVERT(COLLECTION) \
+    CONVERT(CONTINENT) \
+    CONVERT(DEAL_ITEM) \
+    CONVERT(DEFEAT) \
+    CONVERT(DIFFICULTY) \
+    CONVERT(DIPLOMATIC_ACTION) \
+    CONVERT(DIPLOMATIC_STATE) \
+    CONVERT(DISTRICT) \
+    CONVERT(EFFECT) \
+    CONVERT(ERA) \
+    CONVERT(FEATURE) \
+    CONVERT(FORMATION_CLASS) \
+    CONVERT(GAMESPEED) \
+    CONVERT(GAMESPEED_SCALING) \
+    CONVERT(GOODY_HUT) \
+    CONVERT(GOSSIP) \
+    CONVERT(GOVERNMENT) \
+    CONVERT(GREATWORK) \
+    CONVERT(GREAT_PERSON_CLASS) \
+    CONVERT(HAPPINESS) \
+    CONVERT(IMPROVEMENT) \
+    CONVERT(LEADER) \
+    CONVERT(MAPSIZE) \
+    CONVERT(MODIFIER) \
+    CONVERT(NOTIFICATION) \
+    CONVERT(POLICY) \
+    CONVERT(PROJECT) \
+    CONVERT(PROMOTION) \
+    CONVERT(PROMOTION_CLASS) \
+    CONVERT(PSEUDOYIELD) \
+    CONVERT(QUEST) \
+    CONVERT(RELIGION) \
+    CONVERT(REQUIREMENT) \
+    CONVERT(REQUIREMENTSET) \
+    CONVERT(RESOURCE) \
+    CONVERT(ROUTE) \
+    CONVERT(SCORING_CATEGORY) \
+    CONVERT(SCORING_LINE_ITEM) \
+    CONVERT(SLOT) \
+    CONVERT(TERRAIN) \
+    CONVERT(TERRAIN_CLASS) \
+    CONVERT(TRAIT) \
+    CONVERT(TURNMODE) \
+    CONVERT(TURNPHASE) \
+    CONVERT(TURNSEGMENT) \
+    CONVERT(TURNTIMER) \
+    CONVERT(UNIT) \
+    CONVERT(UNITCOMMAND) \
+    CONVERT(UNITOPERATION) \
+    CONVERT(VICTORY) \
+    CONVERT(VICTORY_STRATEGY) \
+    CONVERT(WAR) \
+    CONVERT(WMD) \
+    CONVERT(YIELD) \
+
+
+enum DataKind
+{
+#undef CONVERT
+#define CONVERT(x) dk##x,
+    HASH_KIND_LIST
+#undef CONVERT
+
+    dkNUM,
+    dkAll = dkNUM,
+};
+
+
+void InitSQLiteConstantsTracker();
+void ExitSQLiteConstantsTracker();
+
+void LoadDebugConfigurationConstants(char const* path);
+void LoadDebugGameplayConstants(char const* path);
+
+// All strings returned remain viable so long as
+//   ExitSQLiteConstantsTracker is not called
+char const* LookupHash(uint32 hash, DataKind kind);

@@ -168,6 +168,7 @@
     <ClCompile Include="Libraries\zlib\trees.c" />
     <ClCompile Include="Libraries\zlib\uncompr.c" />
     <ClCompile Include="Libraries\zlib\zutil.c" />
+    <ClCompile Include="LoadSQLiteConstants.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ParseGameData.cpp" />
     <ClCompile Include="ParseHeader.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Libraries\zlib\zconf.h" />
     <ClInclude Include="Libraries\zlib\zlib.h" />
     <ClInclude Include="Libraries\zlib\zutil.h" />
+    <ClInclude Include="LoadSQLiteConstants.h" />
     <ClInclude Include="ParseGameData.h" />
     <ClInclude Include="ParseHeader.h" />
     <ClInclude Include="ParseTail.h" />

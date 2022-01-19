@@ -60,7 +60,7 @@ static int32 LoadPackedSaveData(char const* filename, uint8** out)
     fclose(fp);
 
     if (rdCnt != size)
-        printf("WARNING: Full file wasn't read: size %d - read %d\n", size, rdCnt);
+        printf("WARNING: Full file wasn't read: size %d - read %zd\n", size, rdCnt);
 
 
     uint8 bckup = buffer[4];
@@ -93,7 +93,7 @@ void SaveToFile(char const* filename, uint8 const* data, uint32 size)
     size_t written = fwrite(data, sizeof *data, size, fp);
 
     if (written != size)
-        printf("ERROR: Not all data in the buffer was written: payload %d - written %d\n", size, written);
+        printf("ERROR: Not all data in the buffer was written: payload %d - written %zd\n", size, written);
     if (ferror(fp))
         perror(NULL);
     fclose(fp);

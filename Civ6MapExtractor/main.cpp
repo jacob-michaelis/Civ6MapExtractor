@@ -4,10 +4,11 @@
 #include "ParseGameData.h"
 #include "ParseTail.h"
 #include "SaveConstants.h"
+#include "LoadSQLiteConstants.h"
 
-#pragma comment(lib, "sqlite/sqlite3-static.lib")
+#pragma comment(lib, "Libraries/sqlite/sqlite3-static.lib")
 
-#define SAVE 9
+#define SAVE 50
 
 char const* saves[] =
 {
@@ -71,11 +72,16 @@ char const* saves[] =
     "raf_w_modman.Civ6Save",
     "1_base_test_0.Civ6Save",
     // 50
+    "ghaz2_corner.Civ6Save",
 };
 
 int main(int argc, char* argv[])
 {
     InitConstants();
+    InitSQLiteConstantsTracker();
+
+    LoadDebugConfigurationConstants("DebugConfiguration.sqlite");
+    LoadDebugGameplayConstants("DebugGameplay.sqlite");
 
     SaveData data;
     UnpackSave(saves[SAVE], &data);
@@ -87,6 +93,8 @@ int main(int argc, char* argv[])
 
     //DumpTags();
     //DumpMissingTags();
+
+    ExitSQLiteConstantsTracker();
 
     return 0;
 }

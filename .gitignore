@@ -361,3 +361,4 @@ MigrationBackup/
 *.hexdump
 *_to_bytes.bat
 *out.txt
+*.sqlite
