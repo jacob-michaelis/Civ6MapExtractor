@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "BlockParser.h"
 #include "LoadSQLiteConstants.h"
@@ -19,6 +21,9 @@
 static uint32 width;
 static uint32 height;
 static uint32 length;
+
+static uint8 const* p0Vision;
+static uint16 const* p0Visible;
 
 
 // --- Parsers ----------------------------------------------------------------
@@ -129,6 +134,8 @@ uint8 const* PrintVision(uint8 const* data)
 #if defined(ENABLE_AI_VISION_PRINTING)
     printf("         Explored Area:\n");
 #endif
+    if (!p0Vision)
+        p0Vision = it + 4;
     it = PrintArray8(it, 0);
 
 #if defined(ENABLE_AI_VISION_PRINTING)
@@ -142,6 +149,8 @@ uint8 const* PrintVision(uint8 const* data)
 #endif
     // The array stores the the number of "things" that can see that tile
     it += 12;
+    if (!p0Visible)
+        p0Visible = (uint16 const*)(it + 12);
     it = PrintArray16(it, 0);
 
 #if defined(ENABLE_AI_VISION_PRINTING)
@@ -203,19 +212,21 @@ uint8 const* PrintUnknownSettings(uint8 const* data)
 {
     uint8 const* it = data;
 
-    uint16 id = *(uint16*)it;
-    it += 2;
-    uint16 idAlt = *(uint16*)it;
-    it += 2;
+    uint32 id = *(uint32*)it;
+    it += 4;
 //#if defined(ENABLE_UNKNOWN_SETTING_PRINTING)
-    printf("      %3d - %d - %d - %3d - %3d", id, idAlt,
+    printf("      %3d - %d - %3d - %3d", id,
         *(uint32*)it, *(uint16*)(it + 4), *(uint16*)(it + 6));
 //#endif
     it += 8;
-    for (; *(uint32*)(it) != 0x00000040; it += 4)
+    for (uint32 i = 0; i < 10; ++i, it += 4)
     {
 //#if defined(ENABLE_UNKNOWN_SETTING_PRINTING)
-        printf(" - %4d", *(uint32*)it);
+        uint32 val = *(uint32*)it;
+        if (val)
+            printf(" - %4d", val);
+        else
+            printf(" -     ");
 //#endif
     }
 #if defined(ENABLE_UNKNOWN_SETTING_PRINTING)
@@ -679,10 +690,10 @@ uint8 const* VerifyHeader(uint8 const* data)
     it += 4;
 
     printf("   Unknown 4:   %d - %d\n", rundownId, lastId);
-    for (; *(uint32*)(it) != endId;)
+    do
     {
         it = PrintUnknown4(it);
-    }
+    } while (*(uint32*)(it) != endId);
 
     tailLen = *(uint32*)(it + 4);
     it += 16 + (tailLen * 4);
@@ -695,6 +706,36 @@ uint8 const* VerifyHeader(uint8 const* data)
 
 #define MINIMUM_TILE_DATA_BREADTH 55
 
+struct BaseTile
+{
+    uint16 s0;
+    uint16 s1;
+    uint16 s2;
+    uint16 s3;
+    uint16 s4;
+    uint16 s5;
+    uint32 terrainHash;
+    uint32 featureHash;
+    uint16 s6;
+    uint32 unkHash0;
+    uint8 b7;
+    uint32 resourceHash;
+    uint16 s8;
+    uint32 unkHash1;
+    uint8 b9;
+    uint16 s10;
+    uint16 s11;
+    uint8 b12;
+    uint16 s13;
+    uint8 b15;
+    uint8 b16;
+    uint8 b17;
+    uint8 b18;
+    uint8 b19;
+    uint8 b20;
+    uint32 i21;
+};
+
 uint8 const* ExtractMap(uint8 const* data)
 {
     uint8 const* it = data;
@@ -706,7 +747,248 @@ uint8 const* ExtractMap(uint8 const* data)
 
     for (uint32 i = 0; i < arrayLen; ++i)
     {
+        uint32 x = i % width;
+        uint32 y = i / width;
+        printf("   Tile %5d: (%3d, %3d)", i, x, y);
 
+
+        uint16 areaID = *(uint16*)it;
+        uint16 areaIDPlus1 = *(uint16*)(it + 2);
+        uint16 landVsWaterID = *(uint16*)(it + 4);
+        uint16 landVsWaterIDPlus1 = *(uint16*)(it + 6);
+        uint16 navMeshClusterID = *(uint16*)(it + 8);
+        uint16 navMeshClusterIDPlus1 = *(uint16*)(it + 10);
+        it += 12;
+
+        printf("   %3d-%3d  %3d-%3d", areaID, areaIDPlus1, landVsWaterID, landVsWaterIDPlus1);
+        if (navMeshClusterID != 0xFFFF)
+            printf("  %3d-%3d", navMeshClusterID, navMeshClusterIDPlus1);
+        else
+            printf("         ");
+
+
+        uint32 terrainHash = *(uint32*)it;
+        uint32 featureHash = *(uint32*)(it + 4);
+        uint16   multiTileFeatureID = *(uint16*)(it + 8);
+        uint32 continentHash = *(uint32*)(it + 10);
+        uint8    hasUnit = *(it + 14);
+        uint32 resourceHash = *(uint32*)(it + 15);
+        uint16   hasResource = *(uint16*)(it + 19);
+        uint32 improvementHash = *(uint32*)(it + 21);
+        it += 25;
+
+        char const* name = LookupHash(terrainHash, dkTERRAIN);
+        if (name)
+            printf("   %-23s", name);
+        else if (terrainHash != 0xFFFFFFFF)
+            printf("                0x%08x", terrainHash);
+
+        name = LookupHash(featureHash, dkFEATURE);
+        if (name)
+            printf("   %-29s", name);
+        else if (featureHash != 0xFFFFFFFF)
+            printf("                      0x%08x", featureHash);
+        else
+            printf("                                ");
+
+        if (multiTileFeatureID)
+            printf("   %2d", multiTileFeatureID);
+        else
+            printf("     ");
+
+        name = LookupHash(continentHash, dkCONTINENT);
+        if (name)
+            printf("   %-25s", name);
+        else if (continentHash != 0xFFFFFFFF)
+            printf("                  0x%08x", continentHash);
+        else
+            printf("                            ");
+
+        // does not track religious units
+        if (hasUnit)
+            printf("   %d", hasUnit);
+        else
+            printf("    ");
+
+        name = LookupHash(resourceHash, dkRESOURCE);
+        if (name)
+            printf("   %-25s", name);
+        else if (resourceHash != 0xFFFFFFFF)
+            printf("                  0x%08x", resourceHash);
+        else
+            printf("                            ");
+
+        if (hasResource)
+            printf("   %d", hasResource);
+        else
+            printf("    ");
+
+        name = LookupHash(improvementHash, dkIMPROVEMENT);
+        if (name)
+            printf("   %-30s", name);
+        else if (improvementHash != 0xFFFFFFFF)
+            printf("                       0x%08x", improvementHash);
+        else
+            printf("                                 ");
+
+
+        // { Improvement Owner, Road Age, Road Type }
+        int8 improvementOwner = *it;
+        int8 roadAge = *(it + 1);
+        int8 roadType = *(it + 2);
+        int16 appeal = *(int16*)(it + 3);
+        int8 riverFlowE = *(it + 5);
+        int8 riverFlowSE = *(it + 6);
+        int8 riverFlowSW = *(it + 7);
+        it += 8;
+
+        printf("   { %2d, %2d, %2d }", improvementOwner, roadAge, roadType);
+        printf("   %3d", appeal);
+        printf("   { %2d, %2d, %2d }", riverFlowE, riverFlowSE, riverFlowSW);
+
+
+        uint8 numberOfRiverEdges = *(uint8*)(it);
+        // 0 : SW of X
+        // 1 : W of X
+        // 2 : NW of X
+        // 3 : NE of X
+        // 4 : E of X
+        // 5 : SE of X
+        uint8 rivers = *(uint8*)(it + 1);
+        uint8 cliffs = *(uint8*)(it + 2);
+        // 0 : pillaged improvement
+        // 1 : pillaged road
+        // 2 : ? favored tile when forming trade route?
+        // 3 : initial settler spawn location
+        //
+        // 5 : NE of river
+        // 6 : W of river
+        // 7 : NW of river
+        uint8 tileProperties = *(uint8*)(it + 3);
+        // 0 : NE of cliff
+        // 1 : W of cliff
+        // 2 : NW of cliff
+        // 
+        // 
+        // 5 : Impassable
+        // 6 : Controlled Territory
+        // 
+        // 8 : cracked ice
+        uint16 flags = *(uint16*)(it + 4);
+        it += 6;
+
+        if (numberOfRiverEdges)
+            printf("   %d", numberOfRiverEdges);
+        else
+            printf("    ");
+        if (rivers)
+            printf(" - %2x", rivers);
+        else
+            printf(" -   ");
+        if (cliffs)
+            printf("   %2x", cliffs);
+        else
+            printf("     ");
+        if (tileProperties)
+            printf("   %2x", tileProperties);
+        else
+            printf("     ");
+        if (flags)
+            printf(" - %4x", flags);
+        else
+            printf(" -     ");
+
+
+        uint32 cnt = *(uint32*)it;
+        it += 4;
+        if (cnt)
+            printf("   %2d:", cnt);
+
+
+        if (cnt)
+        {
+            assert(cnt == *(uint32*)it);
+            it += 4;
+
+            for (uint32 j = 0; j < cnt; ++j)
+            {
+                uint32 unkHash = *(uint32*)it;
+                assert(*(uint32*)(it + 4) == 0x0a);
+                assert(*(uint32*)(it + 8) == 0x05000000);
+                assert(*(uint32*)(it + 12) == 0);
+                uint32 cont = *(uint32*)(it + 16);
+                it += 20;
+
+                name = LookupHash(unkHash, dkAll);
+                if (name)
+                    printf("   %s", name);
+                else if (unkHash == 0x2f95b305)
+                    printf("   has had feature");
+                else if (unkHash == 0xd9a34c75)
+                    printf("   has had improvement");
+                else
+                    printf("   unknown");
+
+
+                // unknown
+                if (cont)
+                {
+                    printf("  - %2d:", cont);
+
+                    for (uint32 k = 0; k < cont; ++k)
+                    {
+                        uint32 unkHashCont = *(uint32*)it;
+                        assert(*(uint32*)(it + 4) == 0x02);
+                        assert(*(uint32*)(it + 8) == 0);
+                        assert(*(uint32*)(it + 12) == 0);
+                        uint32 val = *(uint32*)(it + 16);
+                        it += 20;
+
+                        name = LookupHash(unkHashCont, dkAll);
+                        if (name)
+                            printf("   %s", name);
+                        else if (unkHashCont != 0xFFFFFFFF)
+                            printf("   0x%08x", unkHashCont);
+                        printf("  - %2d:", val);
+                    }
+                }
+            }
+        }
+
+        // Territory control details
+        if (flags & 0x40)
+        {
+            // if the civ has twelve cities this is 0 to 11 for that civ
+            uint16 currCivCityID = *(uint16*)(it);
+            // if the civ has 5, conquered 3 and destroyed 2, this has 1 to 9,
+            //   missing 2 numbers
+            uint16 iterativeCivCityID = *(uint16*)(it + 2);
+            uint16 currCivCityID2 = *(uint16*)(it + 4);
+            uint16 iterativeCivCityID2 = *(uint16*)(it + 6);
+            uint16 currDistrictID = *(uint16*)(it + 8);
+            uint16 iterativeDistrictID = *(uint16*)(it + 10);
+            printf("   %3d - %3d", currCivCityID, iterativeCivCityID);
+            if (currDistrictID != 0xFFFF)
+                printf("   %3d - %3d", currDistrictID, iterativeDistrictID);
+            it += 12;
+            assert(currCivCityID == currCivCityID2 &&
+                iterativeCivCityID == iterativeCivCityID2);
+
+            uint8 civID = *it;
+            printf("   %d", civID);
+            it += 1;
+
+            uint32 wonderHash = *(uint32*)(it);
+            if (wonderHash != 0xFFFFFFFF)
+            {
+                name = LookupHash(wonderHash, dkBUILDING);
+                if (name)
+                    printf("   %s", name);
+            }
+            it += 4;
+        }
+
+        printf("\n");
     }
 
     return it;
@@ -723,4 +1005,7 @@ void ParseGameData(uint8 const* body, uint8 const* bodyEnd)
 
     it = VerifyHeader(it);
     it = ExtractMap(it);
+
+    uint32 dist = it - body;
+    printf("Offset: %d - 0x%08x - 0x%08x\n", dist, dist, dist - (dist % DEBUG_BYTE_WIDTH));
 }

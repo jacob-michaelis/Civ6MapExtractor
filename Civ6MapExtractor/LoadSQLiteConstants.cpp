@@ -129,6 +129,31 @@ static void LoadTypeHashes(sqlite3* db)
         return;
 }
 
+static void LoadKindHashes(sqlite3* db)
+{
+    char statement[STATEMENT_BUF_SIZE];
+    sprintf(statement, "SELECT * FROM Kinds;");
+
+    sqlite3_stmt* stmt;
+    int32 error = sqlite3_prepare_v2(db, statement, -1, &stmt, NULL);
+    if (HandleSQLError(error, db))
+        return;
+
+    HashMap* allMap = &gs->map[dkAll];
+
+    for (; sqlite3_step(stmt) != SQLITE_DONE;)
+    {
+        uint8 const* typeStr = sqlite3_column_text(stmt, 0);
+        uint32 hash = (uint32)sqlite3_column_int(stmt, 1);
+
+        (*allMap)[hash] = (char const*)typeStr;
+    }
+
+    error = sqlite3_finalize(stmt);
+    if (HandleSQLError(error, db))
+        return;
+}
+
 
 // --- Interface --------------------------------------------------------------
 
@@ -159,6 +184,7 @@ void LoadDebugGameplayConstants(char const* path)
 
     sqlite3* db = OpenDB(path);
 
+    LoadKindHashes(db);
     LoadTypeHashes(db);
 
     CloseDB(db);

@@ -8,7 +8,7 @@
 
 #pragma comment(lib, "Libraries/sqlite/sqlite3-static.lib")
 
-#define SAVE 50
+#define SAVE 46
 
 char const* saves[] =
 {
@@ -88,7 +88,6 @@ int main(int argc, char* argv[])
     //ParseHeader(data.header, data.headerEnd);
     ParseGameData(data.gamedata, data.gamedataEnd);
     //ParseTail(data.tail, data.tailEnd);
-
     ReleaseSaveData(&data);
 
     //DumpTags();
