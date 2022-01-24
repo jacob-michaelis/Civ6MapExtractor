@@ -85,6 +85,9 @@
     <ClInclude Include="LoadSQLiteConstants.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Civ6MapWriter.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -155,6 +158,9 @@
       <Filter>Unpacked Save Extraction</Filter>
     </ClCompile>
     <ClCompile Include="LoadSQLiteConstants.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Civ6MapWriter.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>

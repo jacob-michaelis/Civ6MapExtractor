@@ -5,11 +5,14 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 #include "BlockParser.h"
 #include "LoadSQLiteConstants.h"
+#include "Civ6MapWriter.h"
 
 #define DEBUG_BYTE_WIDTH 24
+#define MINIMUM_TILE_DATA_BREADTH 55
 
 //#define ENABLE_AI_VISION_PRINTING
 //#define ENABLE_UNKNOWN_SETTING_PRINTING
@@ -20,6 +23,10 @@
 
 static uint32 width;
 static uint32 height;
+static int32 topLatitude;
+static int32 botLatitude;
+static int32 xWrap;
+static int32 yWrap;
 static uint32 length;
 
 static uint8 const* p0Vision;
@@ -456,6 +463,9 @@ uint8 const* PrintUnknown4(uint8 const* data)
     return it;
 }
 
+
+// --- Higher Level Parsers ---------------------------------------------------
+
 uint8 const* VerifyHeader(uint8 const* data)
 {
     uint32 header[] =
@@ -520,12 +530,16 @@ uint8 const* VerifyHeader(uint8 const* data)
     height = *(uint32*)it;
     length = width * height;
     it += 4;
-    assert(*(uint32*)it == 0x5a);
+    topLatitude = *(int32*)it;
     it += 4;
-    assert(*(uint32*)it == 0xffffffa6);
+    botLatitude = *(int32*)it;
     it += 4;
+    xWrap = *it;
+    it += 1;
+    yWrap = *it;
+    it += 1;
     // Unknown section
-    it += 2 + 6 + 6 + 4;
+    it += 6 + 6 + 4;
     uint32 numEntries1 = *(uint32*)it;
     it += 4;
     printf("   Settings/Game Records? set 0:\n");
@@ -704,39 +718,7 @@ uint8 const* VerifyHeader(uint8 const* data)
     return it;
 }
 
-#define MINIMUM_TILE_DATA_BREADTH 55
-
-struct BaseTile
-{
-    uint16 s0;
-    uint16 s1;
-    uint16 s2;
-    uint16 s3;
-    uint16 s4;
-    uint16 s5;
-    uint32 terrainHash;
-    uint32 featureHash;
-    uint16 s6;
-    uint32 unkHash0;
-    uint8 b7;
-    uint32 resourceHash;
-    uint16 s8;
-    uint32 unkHash1;
-    uint8 b9;
-    uint16 s10;
-    uint16 s11;
-    uint8 b12;
-    uint16 s13;
-    uint8 b15;
-    uint8 b16;
-    uint8 b17;
-    uint8 b18;
-    uint8 b19;
-    uint8 b20;
-    uint32 i21;
-};
-
-uint8 const* ExtractMap(uint8 const* data)
+uint8 const* ExtractMap(uint8 const* data, char const* outMap)
 {
     uint8 const* it = data;
 
@@ -745,7 +727,11 @@ uint8 const* ExtractMap(uint8 const* data)
     uint32 arrayLen = *(uint32*)it;
     it += 4;
 
-    for (uint32 i = 0; i < arrayLen; ++i)
+    MapTile* map = (MapTile*)calloc(length, sizeof *map);
+    MapTile* mIt = map;
+    std::vector<PlotAttribute> attrs;
+
+    for (uint32 i = 0; i < arrayLen; ++i, ++mIt)
     {
         uint32 x = i % width;
         uint32 y = i / width;
@@ -778,12 +764,14 @@ uint8 const* ExtractMap(uint8 const* data)
         it += 25;
 
         char const* name = LookupHash(terrainHash, dkTERRAIN);
+        mIt->terrain = name;
         if (name)
             printf("   %-23s", name);
         else if (terrainHash != 0xFFFFFFFF)
             printf("                0x%08x", terrainHash);
 
         name = LookupHash(featureHash, dkFEATURE);
+        mIt->feature = name;
         if (name)
             printf("   %-29s", name);
         else if (featureHash != 0xFFFFFFFF)
@@ -797,6 +785,7 @@ uint8 const* ExtractMap(uint8 const* data)
             printf("     ");
 
         name = LookupHash(continentHash, dkCONTINENT);
+        mIt->continent = name;
         if (name)
             printf("   %-25s", name);
         else if (continentHash != 0xFFFFFFFF)
@@ -811,6 +800,7 @@ uint8 const* ExtractMap(uint8 const* data)
             printf("    ");
 
         name = LookupHash(resourceHash, dkRESOURCE);
+        mIt->resource = name;
         if (name)
             printf("   %-25s", name);
         else if (resourceHash != 0xFFFFFFFF)
@@ -841,6 +831,10 @@ uint8 const* ExtractMap(uint8 const* data)
         int8 riverFlowSE = *(it + 6);
         int8 riverFlowSW = *(it + 7);
         it += 8;
+
+        mIt->flowDirE = riverFlowE;
+        mIt->flowDirSE = riverFlowSE;
+        mIt->flowDirSW = riverFlowSW;
 
         printf("   { %2d, %2d, %2d }", improvementOwner, roadAge, roadType);
         printf("   %3d", appeal);
@@ -876,6 +870,14 @@ uint8 const* ExtractMap(uint8 const* data)
         // 8 : cracked ice
         uint16 flags = *(uint16*)(it + 4);
         it += 6;
+
+        mIt->isNEOfRiver = tileProperties & (1 << 5) ? 1 : 0;
+        mIt->isWOfRiver = tileProperties & (1 << 6) ? 1 : 0;
+        mIt->isNWOfRiver = tileProperties & (1 << 7) ? 1 : 0;
+        mIt->isNEOfCliff = flags & (1 << 0) ? 1 : 0;
+        mIt->isWOfCliff = flags & (1 << 1) ? 1 : 0;
+        mIt->isNWOfCliff = flags & (1 << 2) ? 1 : 0;
+        mIt->isImpassable = flags & (1 << 5) ? 1 : 0;
 
         if (numberOfRiverEdges)
             printf("   %d", numberOfRiverEdges);
@@ -930,7 +932,7 @@ uint8 const* ExtractMap(uint8 const* data)
                     printf("   unknown");
 
 
-                // unknown
+                // Plot Attributes apparently
                 if (cont)
                 {
                     printf("  - %2d:", cont);
@@ -941,7 +943,7 @@ uint8 const* ExtractMap(uint8 const* data)
                         assert(*(uint32*)(it + 4) == 0x02);
                         assert(*(uint32*)(it + 8) == 0);
                         assert(*(uint32*)(it + 12) == 0);
-                        uint32 val = *(uint32*)(it + 16);
+                        int32 val = *(int32*)(it + 16);
                         it += 20;
 
                         name = LookupHash(unkHashCont, dkAll);
@@ -950,6 +952,18 @@ uint8 const* ExtractMap(uint8 const* data)
                         else if (unkHashCont != 0xFFFFFFFF)
                             printf("   0x%08x", unkHashCont);
                         printf("  - %2d:", val);
+
+                        // Tracking the only attributes I've seen
+                        if (unkHashCont == 0x4344acef)
+                        {
+                            PlotAttribute attr;
+                            attr.id = i;
+                            attr.type = "Feature";
+                            attr.name = "Direction";
+                            attr.value = val;
+
+                            attrs.push_back(attr);
+                        }
                     }
                 }
             }
@@ -991,6 +1005,17 @@ uint8 const* ExtractMap(uint8 const* data)
         printf("\n");
     }
 
+    MapDetails* details =  GetFoundMapDetails();
+    MapDetails copy = *details;
+    copy.width = width;
+    copy.height = height;
+    copy.topLatitude = topLatitude;
+    copy.bottomLatitude = botLatitude;
+    copy.wrapX = xWrap;
+    copy.wrapY = yWrap;
+
+    SaveToCiv6Map(outMap, &copy, map, attrs.data(), attrs.data() + attrs.size());
+
     return it;
 }
 
@@ -999,12 +1024,12 @@ uint8 const* ExtractMap(uint8 const* data)
 
 #include <vector>
 
-void ParseGameData(uint8 const* body, uint8 const* bodyEnd)
+void ParseGameData(uint8 const* body, uint8 const* bodyEnd, char const* outMap)
 {
     uint8 const* it = body;
 
     it = VerifyHeader(it);
-    it = ExtractMap(it);
+    it = ExtractMap(it, outMap);
 
     uint32 dist = it - body;
     printf("Offset: %d - 0x%08x - 0x%08x\n", dist, dist, dist - (dist % DEBUG_BYTE_WIDTH));

@@ -1,14 +1,18 @@
 
+#include "typedefs.h"
+#include <string.h>
+
 #include "Unpacker.h"
 #include "ParseHeader.h"
 #include "ParseGameData.h"
 #include "ParseTail.h"
 #include "SaveConstants.h"
 #include "LoadSQLiteConstants.h"
+#include "Civ6MapWriter.h"
 
 #pragma comment(lib, "Libraries/sqlite/sqlite3-static.lib")
 
-#define SAVE 46
+#define SAVE 0
 
 char const* saves[] =
 {
@@ -75,6 +79,23 @@ char const* saves[] =
     "ghaz2_corner.Civ6Save",
 };
 
+void GetOutMapName(char const* inFile, char out[1024])
+{
+    uint32 len = strlen(inFile);
+
+    char const* rIt = inFile + len;
+
+    for (; rIt > inFile; --rIt)
+        if (*rIt == '.')
+        {
+            len = rIt - inFile;
+            break;
+        }
+
+    strncpy(out, inFile, len);
+    out[len] = '\0';
+}
+
 int main(int argc, char* argv[])
 {
     InitConstants();
@@ -83,10 +104,14 @@ int main(int argc, char* argv[])
     LoadDebugConfigurationConstants("DebugConfiguration.sqlite");
     LoadDebugGameplayConstants("DebugGameplay.sqlite");
 
+    char outMap[1024];
+    GetOutMapName(saves[SAVE], outMap);
+
     SaveData data;
+    MapDetails details;
     UnpackSave(saves[SAVE], &data);
-    //ParseHeader(data.header, data.headerEnd);
-    ParseGameData(data.gamedata, data.gamedataEnd);
+    ParseHeader(data.header, data.headerEnd);
+    ParseGameData(data.gamedata, data.gamedataEnd, outMap);
     //ParseTail(data.tail, data.tailEnd);
     ReleaseSaveData(&data);
 

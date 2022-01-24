@@ -2,4 +2,4 @@
 
 #include "typedefs.h"
 
-void ParseGameData(uint8 const* header, uint8 const* headerEnd);
+void ParseGameData(uint8 const* header, uint8 const* headerEnd, char const* outMap);

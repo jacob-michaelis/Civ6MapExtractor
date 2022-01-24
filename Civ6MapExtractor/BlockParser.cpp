@@ -6,6 +6,7 @@
 
 #include "BinaryDataTools.h"
 #include "SaveConstants.h"
+#include "Civ6MapWriter.h"
 
 //#define PRINT_LETags
 
@@ -39,6 +40,8 @@
 
 
 // --- Globals ----------------------------------------------------------------
+
+MapDetails details;
 
 
 // --- Block Parsers ----------------------------------------------------------
@@ -192,6 +195,14 @@ uint8 const* Parse05(uint8 const* data)
 
     if (flags == '\x20' || flags == '\x00')
         textEnd += 4;
+
+    // store specific data
+    // as the text is stored nul terminated and isn't removed until the
+    //   program exits, this should be fine
+    if (tag == 0x0b835c40)
+        details.size = (char const*)text;
+    else if (tag == 0xc45925de)
+        details.ruleSet = (char const*)text;
 
 #ifdef PRINT_05
     printf("   0x05 - 0x%08x\n", tag);
@@ -488,4 +499,9 @@ uint8 const* ParseBlock(uint8 const* data)
     }
 
     return NULL;
+}
+
+MapDetails* GetFoundMapDetails()
+{
+    return &details;
 }
